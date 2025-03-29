@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# SQL Server Management Studio Solution File, Format Version 20.00
+VisualStudioVersion = 15.0.28307.421
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{4F2E2C19-372F-40D8-9FA7-9D2138C6997A}") = "fopec_database", "fopec_database\fopec_database.ssmssqlproj", "{20313956-3F3F-4B78-A899-A36D18C0F09A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Default|Default = Default|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{20313956-3F3F-4B78-A899-A36D18C0F09A}.Default|Default.ActiveCfg = Default
+		{D86B9727-DCBD-4EE5-AF2F-B6035A8C4439}.Default|Default.ActiveCfg = Default
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {954B5873-6798-4C2C-B611-14939D75A3B0}
+	EndGlobalSection
+EndGlobal
