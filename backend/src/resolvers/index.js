@@ -7,6 +7,7 @@ const resolvers = {
       let result = await pool.request().execute('getCrowdsourcedResearch');
 
       return result.recordset.map(row => ({
+        crowdsourced_id: row.crowdsourced_id,
         name: row.name,
         description: row.description,
         username: row.username,
