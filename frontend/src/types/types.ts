@@ -11,19 +11,32 @@ export type ButtonProps = {
   
 export type Company = {
   id: string;
-  description: string;
+  name: string;
   created: string;
   last_updated: string;
 }
-
-export type OwnershipTypes = {
-  id: number;
-  name: String  
+export type CompanySelectProps = {
+  value: string | number
+  onChange: (value: string) => void
+  disabled?: boolean
 }
 
 export type DeleteButtonProps = {
   onClick: () => void
 }
+
+
+export type OwnershipTypes = {
+  id: number;
+  description: String  
+}
+
+export type OwnershipTypeSelectProps = {
+  value: string | number
+  onChange: (value: string) => void
+  disabled?: boolean
+}
+
 
 export type ResearchItem = {
     name: string
@@ -44,3 +57,5 @@ export type TableHeaderProps = {
     label: string
     nowrap?: boolean
   }
+
+
