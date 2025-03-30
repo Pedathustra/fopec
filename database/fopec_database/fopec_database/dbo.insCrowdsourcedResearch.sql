@@ -15,10 +15,24 @@ create proc insCrowdsourcedResearch
 as
 begin
 	set nocount on;
-	select id, description from ownership_type;
+	
+	insert into crowdsourced_research(
+			company_id
+		,	ownership_type_id
+		,	observing_person_id
+		,	created
+		,	notes
+	)
+	values(
+			@companyId
+		,	@ownership_type_id
+		,	@observing_person_id
+		,	getdate()
+		,	@notes
+	)
 end 
 go 
 
 -- exec insCrowdsourcedResearch;
 
---select * from crowdsourced_research
+select * from crowdsourced_research
