@@ -1,4 +1,3 @@
-// src/api/crowdsourced.ts
 import { ResearchItem } from '../types/types'
 import { gqlRequest } from './graphqlClient'
  
