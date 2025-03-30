@@ -9,9 +9,16 @@ const schema = buildSchema(`
     created: String
     notes: String
   }
+  type Company {
+    id: Int
+    name: String
+    created: String
+    last_updated: String
+  }
 
   type Query {
     getCrowdsourcedResearch: [ResearchItem]
+    getCompanies: [Company]
   }
 
     type Mutation {

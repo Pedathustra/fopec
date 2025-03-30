@@ -9,6 +9,13 @@ export type ButtonProps = {
     onClick: () => void
   }
   
+export type Company = {
+  id: string;
+  description: string;
+  created: string;
+  last_updated: string;
+}
+
 
 export type DeleteButtonProps = {
   onClick: () => void

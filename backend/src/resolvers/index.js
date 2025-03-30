@@ -31,6 +31,24 @@ const resolvers = {
       console.error('Delete failed:', err)
       return false
     }
+  },
+  getCompanies: async () => {
+    try{
+      let pool = await sql.connect(dbConfig);
+      let result = await pool.request().execute('getCompanies');
+
+      return result.recordset.map(row => ({
+        id: row.crowdsourced_id,
+        name: row.name,
+        created: row.created,
+        last_updated: row.last_updated,
+      }));
+    }
+    catch(error){
+      console.error('Error executing stored procedure getCompanies', error)
+      return false;
+    }
+
   }
 };
 
