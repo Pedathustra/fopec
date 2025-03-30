@@ -18,6 +18,19 @@ const resolvers = {
       console.error('Error executing stored procedure:', error);
       throw new Error('Failed to fetch research data');
     }
+  },
+  deleteCrowdsourcedResearch: async ({ id }) => {
+    try {
+      let pool = await sql.connect(dbConfig)
+      await pool.request()
+        .input('crowdsourced_research_id', sql.Int, id)
+        .execute('delCrowdsourcedResearch')
+
+      return true
+    } catch (err) {
+      console.error('Delete failed:', err)
+      return false
+    }
   }
 };
 

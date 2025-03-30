@@ -13,6 +13,10 @@ const schema = buildSchema(`
   type Query {
     getCrowdsourcedResearch: [ResearchItem]
   }
+
+    type Mutation {
+    deleteCrowdsourcedResearch(id: Int!): Boolean
+  }
 `);
 
 module.exports = schema;
