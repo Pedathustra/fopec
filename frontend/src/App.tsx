@@ -10,10 +10,15 @@ import { deleteCrowdsourcedResearch } from './graphql/deleteCrowdsourceResearch'
 
 
 function App() {
-  const [items, setItems] = useState<ResearchItem[]>([])
-  const [loading, setLoading] = useState(true)
-  const [addingtRow, setAddingRow] = useState(false)
-  
+  const [items, setItems] = useState<ResearchItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [addingtRow, setAddingRow] = useState(false);
+  const [newEntry, setNewEntry] = useState({
+    companyId: '',
+    ownershipTypeId: '',
+    notes: ''
+  })
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -67,7 +72,7 @@ function App() {
         <thead>
         <tr>
           <TableHeader label="Name" nowrap />
-          <TableHeader label="Description" />
+          <TableHeader label="Type" />
           <TableHeader label="Created" />
           <TableHeader label="Notes" />
           <TableHeader label="Delete" />
@@ -85,7 +90,7 @@ function App() {
                 </TableCell>
             </tr>
           ))}
-          {!addingtRow &&  <AddButtonRow onClick={handleAddNew} />}          
+          {!addingtRow &&  <AddButtonRow onClick={handleAddNew} />}
         </tbody>
       </table>
       </>

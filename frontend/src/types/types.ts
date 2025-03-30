@@ -24,7 +24,7 @@ export type ResearchItem = {
   }
 
 export  type TableCellProps = {
-    children: React.ReactNode
+    children?: React.ReactNode
     nowrap?: boolean
   }
 
