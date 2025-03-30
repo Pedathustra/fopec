@@ -1,10 +1,10 @@
+
+delete from crowdsourced_research;
 delete from company_location;
 delete from company;
 delete from person;
 delete from business_focus;
 delete from address;
-
-delete from crowdsourced_research;
 delete from ownership_type;
 
 ------------------------
@@ -73,7 +73,72 @@ declare @private_equity_type_id int = ( select id from ownership_type where desc
 insert into crowdsourced_research(company_id, ownership_type_id, observing_person_id, created, notes)
 values (@evil_corp_company_id, @sp_ownership_type_id, @robert_id, getdate(), 'I looked into public records and found this...')
 
+------------------------
+-- more test data with person/comapny
+------------------------
 
+-- Person 1
+insert into person (first_name, middle_name, last_name, username, password, created)
+values ('Ada', '', 'Lovelace', 'analyticalengine', 0x01, getdate());
+declare @ada_id int = (select id from person where username = 'analyticalengine');
+
+insert into company(name, created, last_updated, person_id_created, parent_company_id) 
+values ('Lovelace Biotech Holdings', getdate(), getdate(), @ada_id, null);
+declare @lovelace_id int = (select id from company where name = 'Lovelace Biotech Holdings');
+
+insert into crowdsourced_research(company_id, ownership_type_id, observing_person_id, created, notes)
+values (@lovelace_id, @corp_ownership_type_id, @ada_id, getdate(), 'Registered as a corporation but has ties to a larger PE firm.');
+
+-- Person 2
+insert into person (first_name, middle_name, last_name, username, password, created)
+values ('Alan', '', 'Turing', 'enigma', 0x01, getdate());
+declare @alan_id int = (select id from person where username = 'enigma');
+
+insert into company(name, created, last_updated, person_id_created, parent_company_id) 
+values ('Turing Ventures', getdate(), getdate(), @alan_id, null);
+declare @turing_id int = (select id from company where name = 'Turing Ventures');
+
+insert into crowdsourced_research(company_id, ownership_type_id, observing_person_id, created, notes)
+values (@turing_id, @private_equity_type_id, @alan_id, getdate(), 'Likely private equity backed — no public financials found.');
+
+-- Person 3
+insert into person (first_name, middle_name, last_name, username, password, created)
+values ('Grace', '', 'Hopper', 'bugfinder', 0x01, getdate());
+declare @grace_id int = (select id from person where username = 'bugfinder');
+
+insert into company(name, created, last_updated, person_id_created, parent_company_id) 
+values ('Hopper Diagnostics', getdate(), getdate(), @grace_id, null);
+declare @hopper_id int = (select id from company where name = 'Hopper Diagnostics');
+
+insert into crowdsourced_research(company_id, ownership_type_id, observing_person_id, created, notes)
+values (@hopper_id, @shell_ownership_type_id, @grace_id, getdate(), 'Multiple addresses found but no operating info — likely a shell.');
+
+-- Person 4
+insert into person (first_name, middle_name, last_name, username, password, created)
+values ('Linus', '', 'Torvalds', 'penguinpower', 0x01, getdate());
+declare @linus_id int = (select id from person where username = 'penguinpower');
+
+insert into company(name, created, last_updated, person_id_created, parent_company_id) 
+values ('Torvalds Health Partners', getdate(), getdate(), @linus_id, null);
+declare @torvalds_id int = (select id from company where name = 'Torvalds Health Partners');
+
+insert into crowdsourced_research(company_id, ownership_type_id, observing_person_id, created, notes)
+values (@torvalds_id, @sp_ownership_type_id, @linus_id, getdate(), 'Operates independently. No evidence of outside ownership.');
+
+-- Person 5
+insert into person (first_name, middle_name, last_name, username, password, created)
+values ('Margaret', '', 'Hamilton', 'apollocoder', 0x01, getdate());
+declare @margaret_id int = (select id from person where username = 'apollocoder');
+
+insert into company(name, created, last_updated, person_id_created, parent_company_id) 
+values ('Hamilton Medical Group', getdate(), getdate(), @margaret_id, null);
+declare @hamilton_id int = (select id from company where name = 'Hamilton Medical Group');
+
+insert into crowdsourced_research(company_id, ownership_type_id, observing_person_id, created, notes)
+values (@hamilton_id, @corp_ownership_type_id, @margaret_id, getdate(), 'Found on a corporation registry, but parent ownership unclear.');
+
+
+/*
 select	c.name
 	,	ot.description
 	,	p.username
@@ -83,3 +148,5 @@ from crowdsourced_research cr
 	join company c on cr.company_id = c.id
 	join ownership_type ot on cr.ownership_type_id = ot.id
 	join person p on cr.observing_person_id = p.id
+
+*/
