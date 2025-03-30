@@ -16,6 +16,10 @@ export type Company = {
   last_updated: string;
 }
 
+export type OwnershipTypes = {
+  id: number;
+  name: String  
+}
 
 export type DeleteButtonProps = {
   onClick: () => void

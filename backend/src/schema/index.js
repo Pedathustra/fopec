@@ -16,13 +16,30 @@ const schema = buildSchema(`
     last_updated: String
   }
 
+  type OwnershipTypes{
+    id: Int
+    description: String  
+  }
+
   type Query {
     getCrowdsourcedResearch: [ResearchItem]
     getCompanies: [Company]
+    getOwnershipTypes: [OwnershipTypes]
   }
 
     type Mutation {
     deleteCrowdsourcedResearch(id: Int!): Boolean
+    updateCrowdsourcedResearch(
+        id: Int!
+        ownershipTypeId: Int!
+        notes: String!
+    ): Boolean
+    createCrowdsourcedResearch(
+      companyId: Int!
+      ownershipTypeId: Int!
+      observingPersonId: Int!
+      notes: String!
+  ): Boolean
   }
 `);
 
