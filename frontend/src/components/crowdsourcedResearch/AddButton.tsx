@@ -1,8 +1,8 @@
 import React from 'react'
-import { AddButtonProps } from '../types/types'
+import { ButtonProps, AddButtonRowProps } from '../../types/types'
 
 
-export const AddButton: React.FC<AddButtonProps> = ({ onClick }) => (
+ const Button: React.FC<ButtonProps> = ({ onClick }) => (
   <button
     onClick={onClick}
     style={{
@@ -23,3 +23,12 @@ export const AddButton: React.FC<AddButtonProps> = ({ onClick }) => (
   </button>
 )
  
+
+export const AddButtonRow: React.FC<AddButtonRowProps> = ({ onClick, colSpan = 5 }) => (
+    <tr>
+      <td style={{ padding: '0.5rem' }}>
+        <Button onClick={onClick} />
+      </td>
+      <td colSpan={colSpan}></td>
+    </tr>
+  )

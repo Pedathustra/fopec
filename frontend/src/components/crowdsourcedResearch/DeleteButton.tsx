@@ -1,4 +1,4 @@
-import type { DeleteButtonProps } from "../types/types"
+import type { DeleteButtonProps } from "../../types/types"
 
 
 export const DeleteButton: React.FC<DeleteButtonProps> = ({ onClick }) => (

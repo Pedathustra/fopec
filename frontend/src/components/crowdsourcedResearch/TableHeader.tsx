@@ -1,4 +1,4 @@
-import type { TableHeaderProps } from "../types/types"
+import type { TableHeaderProps } from "../../types/types"
   
   export const TableHeader: React.FC<TableHeaderProps> = ({ label, nowrap = false }) => (
     <th

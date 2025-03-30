@@ -1,9 +1,14 @@
 
-export type AddButtonProps = {
-  onClick: () => void
-}
 
+export type AddButtonRowProps = {
+    onClick: () => void
+    colSpan?: number
+  }
 
+export type ButtonProps = {
+    onClick: () => void
+  }
+  
 
 export type DeleteButtonProps = {
   onClick: () => void

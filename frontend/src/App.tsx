@@ -1,14 +1,15 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import type { ResearchItem } from './types/types'
-import { DeleteButton  } from './components/DeleteButton'
-import { TableHeader  } from './components/TableHeader'
-import { TableCell  } from './components/TableCell'
-import { AddButton } from './components/AddButton'
+import { TableHeader } from './components/crowdsourcedResearch/TableHeader'
+import { TableCell } from './components/crowdsourcedResearch/TableCell'
+import { DeleteButton } from './components/crowdsourcedResearch/DeleteButton'
+import { AddButtonRow } from './components/crowdsourcedResearch/AddButton'
+
 
 function App() {
   const [items, setItems] = useState<ResearchItem[]>([])
   const [loading, setLoading] = useState(true)
-
+  const [addingtRow, setAddingRow] = useState(false)
   useEffect(() => {
     const fetchData = async () => {
       const query = `
@@ -49,9 +50,8 @@ function App() {
 
   const handleAddNew = () => {
     console.log("Add New clicked")
-    // show a form, open a modal, add an empty row, etc.
   }
-
+ 
   const logo = (
     <img
     src="/FerretOutLogo.png"
@@ -91,14 +91,7 @@ function App() {
                 </TableCell>
             </tr>
           ))}
-        <tr>
-          <td style={{ padding: '0.5rem' }}>
-          <AddButton onClick={handleAddNew} />
-          </td>
-          {/* Empty cells to span rest of the columns */}
-          <td colSpan={5}></td>
-        </tr>
-
+          {!addingtRow &&  <AddButtonRow onClick={handleAddNew} />}          
         </tbody>
       </table>
       </>

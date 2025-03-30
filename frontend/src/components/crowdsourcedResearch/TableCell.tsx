@@ -1,4 +1,4 @@
-import type { TableCellProps } from "../types/types"
+import type { TableCellProps } from "../../types/types"
 
 export const TableCell: React.FC<TableCellProps> = ({ children, nowrap = false }) => (
     <td
