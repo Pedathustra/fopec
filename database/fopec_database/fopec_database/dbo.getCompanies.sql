@@ -21,4 +21,4 @@ begin
 end 
 go 
 
-exec getCompanies;
+-- exec getCompanies;

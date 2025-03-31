@@ -8,7 +8,10 @@ create proc getCrowdsourcedResearch
 
 as
 select	cr.id crowdsourcedid
-	,	c.name
+	,	c.id as company_id
+	,	c.name as company_name
+	,	c.parent_company_id
+	,	ot.id as ownership_type_id
 	,	ot.description
 	,	p.username
 	,	cr.created
