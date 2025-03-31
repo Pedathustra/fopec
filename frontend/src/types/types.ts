@@ -1,3 +1,4 @@
+import React from "react"
 
 
 export type AddButtonProps = {
@@ -8,18 +9,6 @@ export type AddButtonRowProps = {
     onClick: () => void
     colSpan?: number
   }
-
- export type AddResearchRowProps = {
-  value: {
-    companyId: string
-    ownershipTypeId: string
-    notes: string
-  }
-  onChange: (field: keyof AddResearchRowProps['value'], value: string) => void
-  onSave: () => void
-  companies: Company[]
-  ownershipTypes: OwnershipType[]
-}
 
 export type ButtonProps = {
     onClick: () => void
@@ -44,6 +33,10 @@ export type DeleteButtonProps = {
   onClick: () => void
 }
 
+export type EditButtonProps = {
+  label: string  
+  onClick: React.Dispatch<React.SetStateAction<ResearchItem | null>>
+}
 
 export type OwnershipType = {
   id: number;
@@ -55,6 +48,19 @@ export type OwnershipTypeSelectProps = {
   onChange: (value: string) => void
   ownershipTypes: OwnershipType[]
   disabled?: boolean
+}
+
+export type ResearchEditRowProps = {
+  value: {
+    companyId: string
+    ownershipTypeId: string
+    notes: string
+  }
+  onChange: (field: keyof ResearchEditRowProps['value'], value: string) => void
+  onSave: () => void
+  companies: Company[]
+  ownershipTypes: OwnershipType[]
+  isEditing?: boolean
 }
 
 export type ResearchItem = {

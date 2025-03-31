@@ -7,16 +7,17 @@ import { AddButtonRow } from './components/crowdsourcedResearch/AddButtonRow'
 import { formatDate } from './utils/formatDate'
 import { fetchCrowdsourcedResearch } from './graphql/fetchCrowdsourceResearch'
 import { deleteCrowdsourcedResearch } from './graphql/deleteCrowdsourceResearch'
-import AddResearchRow from './components/crowdsourcedResearch/AddResearchRow'
 import { createCrowdsourcedResearch } from './graphql/createCrowdsourcedResearch'
 import { fetchCompanies } from './graphql/fetchCompanies'
 import { fetchOwnershipTypes } from './graphql/fetchOwnershipTypes'
+import { EditButton } from './components/crowdsourcedResearch/EditButton'
+import ResearchEditRow from './components/crowdsourcedResearch/EditResearchRow'
 
 
 function App() {
   const [items, setItems] = useState<ResearchItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [addingtRow, setAddingRow] = useState(false);
+  const [addingRow, setAddingRow] = useState(false);
   const [newEntry, setNewEntry] = useState({
     companyId: '',
     ownershipTypeId: '',
@@ -24,7 +25,15 @@ function App() {
   })
   const [companies, setCompanies] = useState<Company[]>([])
   const [ownershipTypes, setOwnershipTypes] = useState<OwnershipType[]>([])
-
+  const [editItem, setEditItem] = useState<ResearchItem | null>(null)
+  
+  const [editableRowData, setEditableRowData] = useState({
+    companyId: '',
+    ownershipTypeId: '',
+    notes: ''
+  })
+  
+  
   const refetch = async () => {
     const data = await fetchCrowdsourcedResearch()
     setItems(data)
@@ -83,10 +92,10 @@ function App() {
   const success = await createCrowdsourcedResearch({
     companyId: Number(companyId),
     ownershipTypeId: Number(ownershipTypeId),
-    observingPersonId: 1, // TODO: Replace with actual person ID
+    observingPersonId: 1, // TODO: Replace with actual person ID. Right now, database looks up the first valid id.
     notes
   })
-
+ 
   if (success) {
     setNewEntry({ companyId: '', ownershipTypeId: '', notes: '' })
     setAddingRow(false)
@@ -100,6 +109,48 @@ function App() {
     setAddingRow(true)
   }
  
+const readOnlyRow = (item: ResearchItem, idx: number) =>  
+  (
+    <tr key={idx}>
+      <TableCell nowrap>
+      <EditButton
+          label={item.name}
+          onClick={() => {
+            setEditItem(item)
+            // setEditableRowData({
+            //   companyId: String(item.),
+            //   ownershipTypeId: String(item.),
+            //   notes: item.notes || ''
+            // })
+          }}
+        />
+      </TableCell>
+      <TableCell nowrap>{item.description}</TableCell>
+      <TableCell nowrap>{formatDate(item.created)}</TableCell>
+      <TableCell>{item.notes}</TableCell>
+      <TableCell>
+        <DeleteButton onClick={() => handleDelete(item.crowdsourced_id)} />
+      </TableCell>
+    </tr>
+    )
+ 
+
+  const displayData = items.map((item, idx) =>
+    editItem?.crowdsourced_id === item.crowdsourced_id ? (
+      <ResearchEditRow
+        key={idx}
+        value={editableRowData}
+        onChange={(field, val) => setEditableRowData({ ...editableRowData, [field]: val })}
+        onSave={() => console.log('call handleSave')}
+        companies={companies}
+        ownershipTypes={ownershipTypes}
+        isEditing={true}
+      />
+    ) : (
+      readOnlyRow(item, idx)
+    )
+  )
+
   const logo = (
     <img
     src="/FerretOutLogo.png"
@@ -127,27 +178,18 @@ function App() {
         </tr>
         </thead>
         <tbody>
-          {items.map((item, idx) => (
-            <tr key={idx}>
-              <TableCell nowrap>{item.name}</TableCell>
-              <TableCell nowrap>{item.description}</TableCell>
-              <TableCell nowrap>{formatDate(item.created)}</TableCell>
-              <TableCell>{item.notes}</TableCell>
-              <TableCell>
-                <DeleteButton onClick={() => handleDelete(item.crowdsourced_id)} />
-              </TableCell>
-            </tr>
-          ))}
-          {!addingtRow && <AddButtonRow onClick={handleAddNew} />}
-          {addingtRow && 
-            <AddResearchRow
+          {displayData}
+          {!addingRow && <AddButtonRow onClick={handleAddNew} />}
+          {addingRow && (
+            <ResearchEditRow
               value={newEntry}
               onChange={(field, val) => setNewEntry({ ...newEntry, [field]: val })}
               onSave={handleSaveNewEntry}
               companies={companies}
               ownershipTypes={ownershipTypes}
             />
-          }
+          )}
+
         </tbody>
       </table>
       </>
