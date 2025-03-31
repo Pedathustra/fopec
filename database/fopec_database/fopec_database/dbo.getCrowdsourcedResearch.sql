@@ -7,7 +7,7 @@ go
 create proc getCrowdsourcedResearch
 
 as
-select	cr.id crowdsourcedid
+select	cr.id crowdsourced_id
 	,	c.id as company_id
 	,	c.name as company_name
 	,	c.parent_company_id
