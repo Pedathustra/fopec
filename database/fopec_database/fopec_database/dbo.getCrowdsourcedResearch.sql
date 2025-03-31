@@ -12,7 +12,7 @@ select	cr.id crowdsourcedid
 	,	c.name as company_name
 	,	c.parent_company_id
 	,	ot.id as ownership_type_id
-	,	ot.description
+	,	ot.description as ownership_type_description
 	,	p.username
 	,	cr.created
 	,	cr.notes	
