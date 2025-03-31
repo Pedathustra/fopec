@@ -7,6 +7,8 @@ import { AddButtonRow } from './components/crowdsourcedResearch/AddButtonRow'
 import { formatDate } from './utils/formatDate'
 import { fetchCrowdsourcedResearch } from './graphql/fetchCrowdsourceResearch'
 import { deleteCrowdsourcedResearch } from './graphql/deleteCrowdsourceResearch'
+import AddResearchRow from './components/crowdsourcedResearch/AddResearchRow'
+import { createCrowdsourcedResearch } from './graphql/createCrowdsourcedResearch'
 
 
 function App() {
@@ -18,6 +20,12 @@ function App() {
     ownershipTypeId: '',
     notes: ''
   })
+
+  const refetch = async () => {
+    const data = await fetchCrowdsourcedResearch()
+    setItems(data)
+  }
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,9 +55,31 @@ function App() {
         alert('Something went wrong while deleting.')
       }
     }
+  const handleSaveNewEntry = async () => {
+    const { companyId, ownershipTypeId, notes } = newEntry
+    if (!companyId || !ownershipTypeId || !notes.trim()) {
+      alert('Please fill out all fields')
+      return
+  }
+
+  const success = await createCrowdsourcedResearch({
+    companyId: Number(companyId),
+    ownershipTypeId: Number(ownershipTypeId),
+    observingPersonId: 1, // TODO: Replace with actual person ID
+    notes
+  })
+
+  if (success) {
+    setNewEntry({ companyId: '', ownershipTypeId: '', notes: '' })
+    setAddingRow(false)
+    refetch()
+  } else {
+    alert('Failed to save entry.')
+  }
+}
 
   const handleAddNew = () => {
-    console.log("Add New clicked")
+    setAddingRow(true)
   }
  
   const logo = (
@@ -68,29 +98,36 @@ function App() {
       ) : (
         <>
         <div><h2>See the Hands Holding the Strings</h2></div> 
-      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
         <tr>
           <TableHeader label="Name" nowrap />
           <TableHeader label="Type" />
           <TableHeader label="Created" />
           <TableHeader label="Notes" />
-          <TableHeader label="Delete" />
+          <TableHeader label="Action" />
         </tr>
         </thead>
         <tbody>
           {items.map((item, idx) => (
             <tr key={idx}>
-                <TableCell nowrap>{item.name}</TableCell>
-                <TableCell nowrap>{item.description}</TableCell>
-                <TableCell nowrap >{formatDate(item.created)}</TableCell>
-                <TableCell>{item.notes}</TableCell>
-                <TableCell>
-                  <DeleteButton onClick={() => handleDelete(item.crowdsourced_id)} />
-                </TableCell>
+              <TableCell nowrap>{item.name}</TableCell>
+              <TableCell nowrap>{item.description}</TableCell>
+              <TableCell nowrap>{formatDate(item.created)}</TableCell>
+              <TableCell>{item.notes}</TableCell>
+              <TableCell>
+                <DeleteButton onClick={() => handleDelete(item.crowdsourced_id)} />
+              </TableCell>
             </tr>
           ))}
-          {!addingtRow &&  <AddButtonRow onClick={handleAddNew} />}
+          {!addingtRow && <AddButtonRow onClick={handleAddNew} />}
+          {addingtRow && 
+            <AddResearchRow
+              value={newEntry}
+              onChange={(field, val) => setNewEntry({ ...newEntry, [field]: val })}
+              onSave={handleSaveNewEntry}
+            />
+          }
         </tbody>
       </table>
       </>

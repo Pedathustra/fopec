@@ -1,9 +1,24 @@
 
 
+export type AddButtonProps = {
+  onClick: () => void
+}
+
 export type AddButtonRowProps = {
     onClick: () => void
     colSpan?: number
   }
+
+ export type AddResearchRowProps = {
+  value: {
+    companyId: string
+    ownershipTypeId: string
+    notes: string
+  }
+  onChange: (field: keyof AddResearchRowProps['value'], value: string) => void
+  onSave: () => void
+} 
+
 
 export type ButtonProps = {
     onClick: () => void

@@ -7,7 +7,7 @@ const resolvers = {
       await pool.request()
         .input('companyId', sql.Int, companyId)
         .input('ownership_type_id', sql.Int, ownershipTypeId)
-        .input('observing_person_id', sql.Int, observingPersonId)
+        //.input('observing_person_id', sql.Int, observingPersonId)
         .input('notes', sql.VarChar(sql.MAX), notes)
         .execute('insCrowdsourcedResearch');
   
@@ -54,7 +54,7 @@ const resolvers = {
       let result = await pool.request().execute('getCompanies');
 
       return result.recordset.map(row => ({
-        id: row.crowdsourced_id,
+        id: row.id,
         name: row.name,
         created: row.created,
         last_updated: row.last_updated,

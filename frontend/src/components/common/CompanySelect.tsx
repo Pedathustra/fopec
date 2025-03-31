@@ -23,7 +23,6 @@ const CompanySelect: React.FC<CompanySelectProps> = ({
 
     loadCompanies()
   }, [])
-
   return (
     <select
       value={value}
