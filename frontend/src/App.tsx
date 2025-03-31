@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import type { ResearchItem } from './types/types'
+import type { Company, OwnershipType,  ResearchItem } from './types/types'
 import { TableHeader } from './components/crowdsourcedResearch/TableHeader'
 import { TableCell } from './components/crowdsourcedResearch/TableCell'
 import { DeleteButton } from './components/crowdsourcedResearch/DeleteButton'
@@ -9,6 +9,8 @@ import { fetchCrowdsourcedResearch } from './graphql/fetchCrowdsourceResearch'
 import { deleteCrowdsourcedResearch } from './graphql/deleteCrowdsourceResearch'
 import AddResearchRow from './components/crowdsourcedResearch/AddResearchRow'
 import { createCrowdsourcedResearch } from './graphql/createCrowdsourcedResearch'
+import { fetchCompanies } from './graphql/fetchCompanies'
+import { fetchOwnershipTypes } from './graphql/fetchOwnershipTypes'
 
 
 function App() {
@@ -20,6 +22,8 @@ function App() {
     ownershipTypeId: '',
     notes: ''
   })
+  const [companies, setCompanies] = useState<Company[]>([])
+  const [ownershipTypes, setOwnershipTypes] = useState<OwnershipType[]>([])
 
   const refetch = async () => {
     const data = await fetchCrowdsourcedResearch()
@@ -41,6 +45,20 @@ function App() {
   
     fetchData()
   }, [])
+
+  useEffect(() => {
+    const load = async () => {
+      const [c, o] = await Promise.all([
+        fetchCompanies(),
+        fetchOwnershipTypes()
+      ])
+      setCompanies(c)
+      setOwnershipTypes(o)
+    }
+  
+    load()
+  }, [])
+  
 
   const handleDelete = async (id: number) => {
       try {
@@ -126,6 +144,8 @@ function App() {
               value={newEntry}
               onChange={(field, val) => setNewEntry({ ...newEntry, [field]: val })}
               onSave={handleSaveNewEntry}
+              companies={companies}
+              ownershipTypes={ownershipTypes}
             />
           }
         </tbody>

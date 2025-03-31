@@ -6,20 +6,23 @@ import OwnershipTypeSelect from '../common/OwnershipTypeSelect';
 import AddButton from './AddButton';
 
  
- export const AddResearchRow: React.FC<AddResearchRowProps> = ({ value, onChange, onSave }) => {
+ export const AddResearchRow: React.FC<AddResearchRowProps> = ({ value, onChange, onSave, companies, ownershipTypes }) => {
   return (
     <tr>
       <TableCell>
-        <CompanySelect
-          value={value.companyId}
-          onChange={(val) => onChange('companyId', val)}
-        />
+      <CompanySelect
+        value={value.companyId}
+        onChange={(val) => onChange('companyId', val)}
+        companies={companies}
+      />
       </TableCell>
       <TableCell>
-        <OwnershipTypeSelect
-          value={value.ownershipTypeId}
-          onChange={(val) => onChange('ownershipTypeId', val)}
-        />
+
+      <OwnershipTypeSelect
+        value={value.ownershipTypeId}
+        onChange={(val) => onChange('ownershipTypeId', val)}
+        ownershipTypes={ownershipTypes}
+      />
       </TableCell>
       <TableCell /> {/* Created timestamp handled on the backend */}
       <TableCell>

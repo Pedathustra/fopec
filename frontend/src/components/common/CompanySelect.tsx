@@ -1,29 +1,12 @@
-import React, { useEffect, useState } from 'react'
- 
-import { Company, CompanySelectProps } from '../../types/types'
-import { fetchCompanies } from '../../graphql/fetchCompanies'
-
+import React from 'react'
+import {  CompanySelectProps } from '../../types/types'
 
 const CompanySelect: React.FC<CompanySelectProps> = ({
   value,
   onChange,
+  companies,
   disabled = false
-}) => {
-  const [companies, setCompanies] = useState<Company[]>([])
-
-  useEffect(() => {
-    const loadCompanies = async () => {
-      try {
-        const data = await fetchCompanies()
-        setCompanies(data)
-      } catch (err) {
-        console.error('Error fetching companies:', err)
-      }
-    }
-
-    loadCompanies()
-  }, [])
-  return (
+}) => (
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
@@ -37,6 +20,5 @@ const CompanySelect: React.FC<CompanySelectProps> = ({
       ))}
     </select>
   )
-}
 
 export default CompanySelect
