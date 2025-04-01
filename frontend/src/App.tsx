@@ -160,6 +160,7 @@ const readOnlyRow = (item: ResearchItem, idx: number) =>
         onSave={handleUpdate}
         companies={companies}
         ownershipTypes={ownershipTypes}
+        onCancel={() => setEditItem(null)}
       />
     ) : (
       readOnlyRow(item, idx)
@@ -202,6 +203,7 @@ const readOnlyRow = (item: ResearchItem, idx: number) =>
               onSave={handleSaveNewEntry}
               companies={companies}
               ownershipTypes={ownershipTypes}
+              onCancel={() => setAddingRow(false)}
             />
           )}
 

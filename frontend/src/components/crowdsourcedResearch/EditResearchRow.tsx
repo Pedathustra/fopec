@@ -4,6 +4,7 @@ import CompanySelect from '../common/CompanySelect'
 import OwnershipTypeSelect from '../common/OwnershipTypeSelect'
 import AddButton from './AddButton'
 import { ResearchEditRowProps } from '../../types/types'
+import { CancelButton } from './CancelButton'
 
 const ResearchEditRow: React.FC<ResearchEditRowProps> = ({
   value,
@@ -11,8 +12,8 @@ const ResearchEditRow: React.FC<ResearchEditRowProps> = ({
   onSave,
   companies,
   ownershipTypes,
+  onCancel
 }) => {
-    console.log('value', value)
   return (
     <tr>
       <TableCell>
@@ -40,7 +41,10 @@ const ResearchEditRow: React.FC<ResearchEditRowProps> = ({
         />
       </TableCell>
       <TableCell>
-        <AddButton onClick={onSave} />
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <AddButton onClick={onSave} />
+            <CancelButton onClick={onCancel} />
+        </div>
       </TableCell>
     </tr>
   )

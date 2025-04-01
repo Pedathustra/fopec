@@ -12,8 +12,13 @@ export type AddButtonRowProps = {
 
 export type ButtonProps = {
     onClick: () => void
-  }
+}
   
+export type CancelButtonProps = {
+  onClick: () => void
+}
+
+
 export type Company = {
   id: string;
   name: string;
@@ -60,6 +65,7 @@ export type ResearchEditRowProps = {
   onSave: () => void
   companies: Company[]
   ownershipTypes: OwnershipType[]
+  onCancel: () => void
 }
 
 export type ResearchItem = {
