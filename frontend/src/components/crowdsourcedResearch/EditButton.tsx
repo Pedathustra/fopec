@@ -4,7 +4,7 @@ import { EditButtonProps } from '../../types/types'
 
 export const EditButton: React.FC<EditButtonProps> = ({ label, onClick }) => (
   <button
-    onClick={() => onClick}
+    onClick={onClick}
     title={`Edit ${label}`}
     style={{
       background: 'none',

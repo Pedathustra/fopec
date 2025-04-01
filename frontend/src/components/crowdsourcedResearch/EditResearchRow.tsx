@@ -11,8 +11,8 @@ const ResearchEditRow: React.FC<ResearchEditRowProps> = ({
   onSave,
   companies,
   ownershipTypes,
-  isEditing = false
 }) => {
+    console.log('value', value)
   return (
     <tr>
       <TableCell>

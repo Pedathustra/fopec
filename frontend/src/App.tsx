@@ -12,6 +12,7 @@ import { fetchCompanies } from './graphql/fetchCompanies'
 import { fetchOwnershipTypes } from './graphql/fetchOwnershipTypes'
 import { EditButton } from './components/crowdsourcedResearch/EditButton'
 import ResearchEditRow from './components/crowdsourcedResearch/EditResearchRow'
+import { updateCrowdsourcedResearch } from './graphql/updateCrowdsourcedResearch'
 
 
 function App() {
@@ -73,7 +74,7 @@ function App() {
       try {
         const success = await deleteCrowdsourcedResearch(id)
         if (success) {
-          setItems(prev => prev.filter(item => item.crowdsourced_id !== id))
+          setItems(prev => prev.filter(item => item.crowdsourcedId !== id))
         } else {
           alert('Delete failed.')
         }
@@ -88,6 +89,7 @@ function App() {
       alert('Please fill out all fields')
       return
   }
+
 
   const success = await createCrowdsourcedResearch({
     companyId: Number(companyId),
@@ -105,6 +107,22 @@ function App() {
   }
 }
 
+const handleUpdate = async () => {
+  if (!editItem) return
+
+  const success = await updateCrowdsourcedResearch({
+    id: editItem.crowdsourcedId,
+    ownershipTypeId: Number(editableRowData.ownershipTypeId),
+    notes: editableRowData.notes
+  })
+
+  if (success) {
+    setEditItem(null)
+    await refetch()
+  } else {
+    alert('Update failed')
+  }
+}
   const handleAddNew = () => {
     setAddingRow(true)
   }
@@ -114,37 +132,34 @@ const readOnlyRow = (item: ResearchItem, idx: number) =>
     <tr key={idx}>
       <TableCell nowrap>
       <EditButton
-          label={item.name}
+          label={item.companyName}
           onClick={() => {
-            setEditItem(item)
-            // setEditableRowData({
-            //   companyId: String(item.),
-            //   ownershipTypeId: String(item.),
-            //   notes: item.notes || ''
-            // })
+             setEditItem(item)
+             setEditableRowData({
+               companyId: String(item.companyId),
+               ownershipTypeId: String(item.ownershipTypeId),
+               notes: item.notes || ''
+            })
           }}
         />
       </TableCell>
-      <TableCell nowrap>{item.description}</TableCell>
+      <TableCell nowrap>{item.ownershipTypeDescription}</TableCell>
       <TableCell nowrap>{formatDate(item.created)}</TableCell>
       <TableCell>{item.notes}</TableCell>
       <TableCell>
-        <DeleteButton onClick={() => handleDelete(item.crowdsourced_id)} />
+        <DeleteButton onClick={() => handleDelete(item.crowdsourcedId)} />
       </TableCell>
     </tr>
     )
  
-
-  const displayData = items.map((item, idx) =>
-    editItem?.crowdsourced_id === item.crowdsourced_id ? (
+    const displayData = items.map((item, idx) =>   editItem?.crowdsourcedId === item.crowdsourcedId ? (
       <ResearchEditRow
         key={idx}
         value={editableRowData}
         onChange={(field, val) => setEditableRowData({ ...editableRowData, [field]: val })}
-        onSave={() => console.log('call handleSave')}
+        onSave={handleUpdate}
         companies={companies}
         ownershipTypes={ownershipTypes}
-        isEditing={true}
       />
     ) : (
       readOnlyRow(item, idx)
