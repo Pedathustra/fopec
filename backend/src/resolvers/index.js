@@ -23,9 +23,12 @@ const resolvers = {
       let result = await pool.request().execute('getCrowdsourcedResearch');
 
       return result.recordset.map(row => ({
-        crowdsourced_id: row.crowdsourced_id,
-        name: row.name,
-        description: row.description,
+        crowdsourcedId: row.crowdsourced_id,
+        companyId: row.company_id,
+        companyName: row.company_name,
+        parentCompanyId: row.parent_company_id,
+        ownershipTypeId: row.ownership_type_id,
+        ownershipTypeDescription: row.ownership_type_description,
         username: row.username,
         created: row.created,
         notes: row.notes

@@ -12,8 +12,13 @@ export type AddButtonRowProps = {
 
 export type ButtonProps = {
     onClick: () => void
-  }
+}
   
+export type CancelButtonProps = {
+  onClick: () => void
+}
+
+
 export type Company = {
   id: string;
   name: string;
@@ -35,7 +40,7 @@ export type DeleteButtonProps = {
 
 export type EditButtonProps = {
   label: string  
-  onClick: React.Dispatch<React.SetStateAction<ResearchItem | null>>
+  onClick: ()=> void //React.Dispatch<React.SetStateAction<ResearchItem | null>>
 }
 
 export type OwnershipType = {
@@ -60,17 +65,20 @@ export type ResearchEditRowProps = {
   onSave: () => void
   companies: Company[]
   ownershipTypes: OwnershipType[]
-  isEditing?: boolean
+  onCancel: () => void
 }
 
 export type ResearchItem = {
-    name: string
-    description: string
-    username: string
-    created: string
-    notes: string
-    crowdsourced_id: number
-  }
+  crowdsourcedId: number
+  companyId: number
+  companyName: string;
+  parentCompanyId: number | null
+  ownershipTypeId: number
+  ownershipTypeDescription: string
+  username: string
+  created: string
+  notes: string
+}
 
 export  type TableCellProps = {
     children?: React.ReactNode

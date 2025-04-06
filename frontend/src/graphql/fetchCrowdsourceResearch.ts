@@ -5,12 +5,15 @@ export async function fetchCrowdsourcedResearch(): Promise<ResearchItem[]> {
   const query = `
     query {
       getCrowdsourcedResearch {
-        crowdsourced_id
-        name
-        description
-        username
-        created
-        notes
+          crowdsourcedId
+          companyId
+          companyName
+          parentCompanyId
+          ownershipTypeId
+          ownershipTypeDescription
+          username
+          created
+          notes
       }
     }
   `

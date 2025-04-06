@@ -2,13 +2,17 @@ const { buildSchema } = require('graphql');
 
 const schema = buildSchema(`
   type ResearchItem {
-    crowdsourced_id: Int
-    name: String
-    description: String
+    crowdsourcedId: Int
+    companyId: Int
+    companyName: String
+    parentCompanyId: Int
+    ownershipTypeId: Int
+    ownershipTypeDescription: String
     username: String
     created: String
     notes: String
   }
+
   type Company {
     id: Int
     name: String
