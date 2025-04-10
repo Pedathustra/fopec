@@ -60,6 +60,7 @@ export type ResearchEditRowProps = {
     companyId: string
     ownershipTypeId: string
     notes: string
+    parentCompanyId: string| null
   }
   onChange: (field: keyof ResearchEditRowProps['value'], value: string) => void
   onSave: () => void
@@ -72,7 +73,8 @@ export type ResearchItem = {
   crowdsourcedId: number
   companyId: number
   companyName: string;
-  parentCompanyId: number | null
+  parentCompanyId: string | null
+  parentCompanyName: string | null 
   ownershipTypeId: number
   ownershipTypeDescription: string
   username: string

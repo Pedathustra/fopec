@@ -5,12 +5,13 @@ const schema = buildSchema(`
     crowdsourcedId: Int
     companyId: Int
     companyName: String
-    parentCompanyId: Int
     ownershipTypeId: Int
     ownershipTypeDescription: String
+    parentCompanyId: Int
     username: String
     created: String
     notes: String
+    parentCompanyName: String
   }
 
   type Company {
@@ -37,12 +38,14 @@ const schema = buildSchema(`
         id: Int!
         ownershipTypeId: Int!
         notes: String!
+        parentCompanyId: Int
     ): Boolean
     createCrowdsourcedResearch(
       companyId: Int!
       ownershipTypeId: Int!
       observingPersonId: Int!
       notes: String!
+      parentCompanyId: Int
   ): Boolean
   }
 `);

@@ -14,7 +14,6 @@ import { EditButton } from './components/crowdsourcedResearch/EditButton'
 import ResearchEditRow from './components/crowdsourcedResearch/EditResearchRow'
 import { updateCrowdsourcedResearch } from './graphql/updateCrowdsourcedResearch'
 
-
 function App() {
   const [items, setItems] = useState<ResearchItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,24 +21,24 @@ function App() {
   const [newEntry, setNewEntry] = useState({
     companyId: '',
     ownershipTypeId: '',
-    notes: ''
+    notes: '',
+    parentCompanyId: ''
   })
   const [companies, setCompanies] = useState<Company[]>([])
   const [ownershipTypes, setOwnershipTypes] = useState<OwnershipType[]>([])
   const [editItem, setEditItem] = useState<ResearchItem | null>(null)
-  
+
   const [editableRowData, setEditableRowData] = useState({
     companyId: '',
     ownershipTypeId: '',
-    notes: ''
+    notes: '',
+    parentCompanyId: ''
   })
-  
-  
+
   const refetch = async () => {
     const data = await fetchCrowdsourcedResearch()
     setItems(data)
   }
-  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,7 +51,6 @@ function App() {
         setLoading(false)
       }
     }
-  
     fetchData()
   }, [])
 
@@ -65,80 +63,81 @@ function App() {
       setCompanies(c)
       setOwnershipTypes(o)
     }
-  
     load()
   }, [])
-  
 
   const handleDelete = async (id: number) => {
-      try {
-        const success = await deleteCrowdsourcedResearch(id)
-        if (success) {
-          setItems(prev => prev.filter(item => item.crowdsourcedId !== id))
-        } else {
-          alert('Delete failed.')
-        }
-      } catch (err) {
-        console.error('Delete error:', err)
-        alert('Something went wrong while deleting.')
+    try {
+      const success = await deleteCrowdsourcedResearch(id)
+      if (success) {
+        setItems(prev => prev.filter(item => item.crowdsourcedId !== id))
+      } else {
+        alert('Delete failed.')
       }
+    } catch (err) {
+      console.error('Delete error:', err)
+      alert('Something went wrong while deleting.')
     }
+  }
+
   const handleSaveNewEntry = async () => {
-    const { companyId, ownershipTypeId, notes } = newEntry
+    const { companyId, ownershipTypeId, notes, parentCompanyId } = newEntry
     if (!companyId || !ownershipTypeId || !notes.trim()) {
       alert('Please fill out all fields')
       return
+    }
+
+    const success = await createCrowdsourcedResearch({
+      companyId: Number(companyId),
+      ownershipTypeId: Number(ownershipTypeId),
+      observingPersonId: 1,
+      notes,
+      parentCompanyId: parentCompanyId ? Number(parentCompanyId) : null
+    })
+
+    if (success) {
+      setNewEntry({ companyId: '', ownershipTypeId: '', notes: '', parentCompanyId: '' })
+      setAddingRow(false)
+      refetch()
+    } else {
+      alert('Failed to save entry.')
+    }
   }
 
+  const handleUpdate = async () => {
+    if (!editItem) return
 
-  const success = await createCrowdsourcedResearch({
-    companyId: Number(companyId),
-    ownershipTypeId: Number(ownershipTypeId),
-    observingPersonId: 1, // TODO: Replace with actual person ID. Right now, database looks up the first valid id.
-    notes
-  })
- 
-  if (success) {
-    setNewEntry({ companyId: '', ownershipTypeId: '', notes: '' })
-    setAddingRow(false)
-    refetch()
-  } else {
-    alert('Failed to save entry.')
+    const success = await updateCrowdsourcedResearch({
+      id: editItem.crowdsourcedId,
+      ownershipTypeId: Number(editableRowData.ownershipTypeId),
+      notes: editableRowData.notes,
+      parentCompanyId: editableRowData.parentCompanyId ? Number(editableRowData.parentCompanyId) : null
+    })
+
+    if (success) {
+      setEditItem(null)
+      await refetch()
+    } else {
+      alert('Update failed')
+    }
   }
-}
 
-const handleUpdate = async () => {
-  if (!editItem) return
-
-  const success = await updateCrowdsourcedResearch({
-    id: editItem.crowdsourcedId,
-    ownershipTypeId: Number(editableRowData.ownershipTypeId),
-    notes: editableRowData.notes
-  })
-
-  if (success) {
-    setEditItem(null)
-    await refetch()
-  } else {
-    alert('Update failed')
-  }
-}
   const handleAddNew = () => {
     setAddingRow(true)
   }
- 
-const readOnlyRow = (item: ResearchItem, idx: number) =>  
-  (
+
+  const readOnlyRow = (item: ResearchItem, idx: number) => (
     <tr key={idx}>
       <TableCell nowrap>
-      <EditButton
+        <EditButton
           label={item.companyName}
           onClick={() => {
-             setEditItem(item)
-             setEditableRowData({
-               companyId: String(item.companyId),
-               ownershipTypeId: String(item.ownershipTypeId),
-               notes: item.notes || ''
+            setEditItem(item)
+            setEditableRowData({
+              companyId: String(item.companyId),
+              ownershipTypeId: String(item.ownershipTypeId),
+              notes: item.notes || '',
+              parentCompanyId: item.parentCompanyId ? String(item.parentCompanyId) : ''
             })
           }}
         />
@@ -146,13 +145,15 @@ const readOnlyRow = (item: ResearchItem, idx: number) =>
       <TableCell nowrap>{item.ownershipTypeDescription}</TableCell>
       <TableCell nowrap>{formatDate(item.created)}</TableCell>
       <TableCell>{item.notes}</TableCell>
+      <TableCell>{item.parentCompanyId ? item.parentCompanyName : '—'}</TableCell>
       <TableCell>
         <DeleteButton onClick={() => handleDelete(item.crowdsourcedId)} />
       </TableCell>
     </tr>
-    )
- 
-    const displayData = items.map((item, idx) =>   editItem?.crowdsourcedId === item.crowdsourcedId ? (
+  )
+
+  const displayData = items.map((item, idx) =>
+    editItem?.crowdsourcedId === item.crowdsourcedId ? (
       <ResearchEditRow
         key={idx}
         value={editableRowData}
@@ -169,50 +170,50 @@ const readOnlyRow = (item: ResearchItem, idx: number) =>
 
   const logo = (
     <img
-    src="/FerretOutLogo.png"
-    alt="FOPEC logo"
-    style={{ width: '50%', height: '50%', marginLeft: '2rem' }}
-  />
+      src="/FerretOutLogo.png"
+      alt="FOPEC logo"
+      style={{ width: '50%', height: '50%', marginLeft: '2rem' }}
+    />
   )
 
   return (
-    <div style={{ display: 'flex', flexDirection : 'row', alignItems: 'flex-start', justifyContent: 'flex-start', padding: '1rem', flex:1 }}>
-      <div style={{ display: 'flex', flex:1, flexDirection : 'column', alignItems: 'flex-start' }}>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <>
-        <div><h2>See the Hands Holding the Strings</h2></div> 
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-        <thead>
-        <tr>
-          <TableHeader label="Name" nowrap />
-          <TableHeader label="Type" />
-          <TableHeader label="Created" />
-          <TableHeader label="Notes" />
-          <TableHeader label="Action" />
-        </tr>
-        </thead>
-        <tbody>
-          {displayData}
-          {!addingRow && <AddButtonRow onClick={handleAddNew} />}
-          {addingRow && (
-            <ResearchEditRow
-              value={newEntry}
-              onChange={(field, val) => setNewEntry({ ...newEntry, [field]: val })}
-              onSave={handleSaveNewEntry}
-              companies={companies}
-              ownershipTypes={ownershipTypes}
-              onCancel={() => setAddingRow(false)}
-            />
-          )}
-
-        </tbody>
-      </table>
-      </>
-      )}
+    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start', padding: '1rem', flex: 1 }}>
+      <div style={{ display: 'flex', flex: 1, flexDirection: 'column', alignItems: 'flex-start' }}>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <>
+            <div><h2>See the Hands Holding the Strings</h2></div>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr>
+                  <TableHeader label="Name" nowrap />
+                  <TableHeader label="Type" />
+                  <TableHeader label="Created" />
+                  <TableHeader label="Notes" />
+                  <TableHeader label="Parent Company" />
+                  <TableHeader label="Action" />
+                </tr>
+              </thead>
+              <tbody>
+                {displayData}
+                {!addingRow && <AddButtonRow onClick={handleAddNew} />}
+                {addingRow && (
+                  <ResearchEditRow
+                    value={newEntry}
+                    onChange={(field, val) => setNewEntry({ ...newEntry, [field]: val })}
+                    onSave={handleSaveNewEntry}
+                    companies={companies}
+                    ownershipTypes={ownershipTypes}
+                    onCancel={() => setAddingRow(false)}
+                  />
+                )}
+              </tbody>
+            </table>
+          </>
+        )}
       </div>
-    {logo}
+      {logo}
     </div>
   )
 }

@@ -9,6 +9,7 @@ const resolvers = {
         .input('ownership_type_id', sql.Int, ownershipTypeId)
         //.input('observing_person_id', sql.Int, observingPersonId)
         .input('notes', sql.VarChar(sql.MAX), notes)
+        .input('parentCompanyId', sql.Int, parentCompanyId)
         .execute('insCrowdsourcedResearch');
   
       return true;
@@ -27,6 +28,7 @@ const resolvers = {
         companyId: row.company_id,
         companyName: row.company_name,
         parentCompanyId: row.parent_company_id,
+        parentCompanyName: row.parent_company_name,
         ownershipTypeId: row.ownership_type_id,
         ownershipTypeDescription: row.ownership_type_description,
         username: row.username,
@@ -92,6 +94,7 @@ const resolvers = {
         .input('crowdsourced_research_id', sql.Int, id)
         .input('ownership_type_id', sql.Int, ownershipTypeId)
         .input('notes', sql.VarChar(sql.MAX), notes)
+        .input('parent_company_id', sql.Int(sql.int), parentCompanyId)
         .execute('updCrowdsourcedResearch');
   
       return true;
