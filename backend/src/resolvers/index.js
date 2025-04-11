@@ -87,14 +87,14 @@ const resolvers = {
     }
 
   },
-  updateCrowdsourcedResearch: async ({ id, ownershipTypeId, notes }) => {
+  updateCrowdsourcedResearch: async ({ id, ownershipTypeId, notes, parentCompanyId }) => {
     try {
       let pool = await sql.connect(dbConfig);
       await pool.request()
         .input('crowdsourced_research_id', sql.Int, id)
         .input('ownership_type_id', sql.Int, ownershipTypeId)
         .input('notes', sql.VarChar(sql.MAX), notes)
-        .input('parent_company_id', sql.Int(sql.int), parentCompanyId)
+        .input('parent_company_id', sql.Int(sql.Int), parentCompanyId)
         .execute('updCrowdsourcedResearch');
   
       return true;

@@ -42,7 +42,7 @@ const ResearchEditRow: React.FC<ResearchEditRowProps> = ({
       </TableCell>
       <TableCell>
         <CompanySelect
-          value={value.parentCompanyId}
+          value={value.parentCompanyId === null ? '' : value.parentCompanyId }
           onChange={(val) => onChange('parentCompanyId', val)}
           companies={companies}
         />

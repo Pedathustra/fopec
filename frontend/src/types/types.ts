@@ -49,7 +49,7 @@ export type OwnershipType = {
 }
 
 export type OwnershipTypeSelectProps = {
-  value: string | number
+  value: string | null
   onChange: (value: string) => void
   ownershipTypes: OwnershipType[]
   disabled?: boolean
