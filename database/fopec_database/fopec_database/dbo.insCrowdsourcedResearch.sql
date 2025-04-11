@@ -12,6 +12,7 @@ create proc insCrowdsourcedResearch
 	,	@ownership_type_id int
 	,	@observing_person_id int = null 
 	,	@notes varchar(max)
+	,	@parent_company_id int = null
 as
 begin
 	set nocount on;
@@ -24,6 +25,7 @@ begin
 		,	observing_person_id
 		,	created
 		,	notes
+		,	parent_company_id
 	)
 	values(
 			@companyId
@@ -31,6 +33,7 @@ begin
 		,	@observing_person_id
 		,	getdate()
 		,	@notes
+		,	@parent_company_id
 	)
 end 
 go 
