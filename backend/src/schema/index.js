@@ -13,7 +13,10 @@ const schema = buildSchema(`
     notes: String
     parentCompanyName: String
   }
-
+type RegisterResult {
+  success: Boolean!
+  error: String
+}
   type Company {
     id: Int
     name: String
@@ -47,7 +50,16 @@ const schema = buildSchema(`
       notes: String!
       parentCompanyId: Int
   ): Boolean
+  registerPerson(
+    first_name: String!
+    last_name: String!
+    middle_name: String
+    username: String!
+    password: String!
+  ): RegisterResult!
   }
 `);
 
 module.exports = schema;
+ 
+

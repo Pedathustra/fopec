@@ -1,5 +1,7 @@
 const { sql, dbConfig } = require('../config/db');
-
+//import { IResolvers } from '@graphql-tools/utils' 
+// import bcrypt from 'bcrypt'
+ 
 const resolvers = {
   createCrowdsourcedResearch: async ({ companyId, ownershipTypeId, observingPersonId, notes }) => {
     try {
@@ -75,7 +77,6 @@ const resolvers = {
     try{
       let pool = await sql.connect(dbConfig);
       let result = await pool.request().execute('getOwnershipTypes');
-
       return result.recordset.map(row => ({
         id: row.id,
         description: row.description,
@@ -101,6 +102,30 @@ const resolvers = {
     } catch (error) {
       console.error('Update failed:', error);
       return false;
+    }
+  }, 
+  registerPerson: async ({ first_name, last_name, middle_name, username, password }) => {
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10)
+      const buffer = Buffer.from(hashedPassword)
+
+      const pool = await sql.connect(dbConfig)
+      const result = await pool.request()
+        .input('first_name', sql.VarChar(255), first_name)
+        .input('last_name', sql.VarChar(255), last_name)
+        .input('middle_name', sql.VarChar(255), middle_name || '')
+        .input('username', sql.VarChar(255), username)
+        .input('password', sql.VarBinary(sql.MAX), buffer)
+        .execute('insPerson')
+
+      if (result.returnValue === -1) {
+        return { success: false, error: 'Username already exists' }
+      }
+
+      return { success: true, error: null }
+    } catch (err) {
+      console.error('Registration error:', err)
+      return { success: false, error: 'Internal server error' }
     }
   }
 };
