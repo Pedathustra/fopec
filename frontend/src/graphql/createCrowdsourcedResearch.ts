@@ -5,6 +5,8 @@ export async function createCrowdsourcedResearch(input: {
   ownershipTypeId: number
   observingPersonId: number
   notes: string
+  parentCompanyId: number | null
+
 }): Promise<boolean> {
   const mutation = `
     mutation(
@@ -12,12 +14,14 @@ export async function createCrowdsourcedResearch(input: {
       $ownershipTypeId: Int!,
       $observingPersonId: Int!,
       $notes: String!
+      parentCompanyId: Int,
     ) {
       createCrowdsourcedResearch(
         companyId: $companyId,
         ownershipTypeId: $ownershipTypeId,
         observingPersonId: $observingPersonId,
-        notes: $notes
+        notes: $notes,
+        parentCompanyId: $parentCompanyId,
       )
     }
   `

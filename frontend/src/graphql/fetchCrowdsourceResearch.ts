@@ -9,6 +9,7 @@ export async function fetchCrowdsourcedResearch(): Promise<ResearchItem[]> {
           companyId
           companyName
           parentCompanyId
+          parentCompanyName
           ownershipTypeId
           ownershipTypeDescription
           username

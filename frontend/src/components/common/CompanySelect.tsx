@@ -6,7 +6,7 @@ const CompanySelect: React.FC<CompanySelectProps> = ({
   onChange,
   companies,
   disabled = false
-}) => (
+}) =>  (  
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}

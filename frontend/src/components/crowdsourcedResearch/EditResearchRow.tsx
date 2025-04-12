@@ -41,6 +41,13 @@ const ResearchEditRow: React.FC<ResearchEditRowProps> = ({
         />
       </TableCell>
       <TableCell>
+        <CompanySelect
+          value={value.parentCompanyId === null ? '' : value.parentCompanyId }
+          onChange={(val) => onChange('parentCompanyId', val)}
+          companies={companies}
+        />
+      </TableCell>
+      <TableCell>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <AddButton onClick={onSave} />
             <CancelButton onClick={onCancel} />
