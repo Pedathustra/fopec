@@ -1,34 +1,63 @@
-import { useState } from 'react'
+import { useState } from 'react';
+import { createPerson } from '../../graphql/createPerson';
+import { Input } from '../common/Input';
+
 
 interface AuthFormProps {
   onLogin: (jwt: string) => void
 }
 
+
+const emptyPerson = { username: '', password: '', confirmPassword: '', firstName: '', middleName: '', lastName: '' }
+
 export function AuthForm({ onLogin }: AuthFormProps) {
   const [mode, setMode] = useState<'login' | 'register'>('login')
-  const [auth, setAuth] = useState({ username: '', password: '', confirmPassword: '', firstName: '', lastName: '' })
+  const [auth, setAuth] = useState(emptyPerson)
   const [error, setError] = useState<string | null>(null)
 
   const handleChange = (field: string, value: string) => {
     setAuth(prev => ({ ...prev, [field]: value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
+  
     if (mode === 'register') {
       if (auth.password !== auth.confirmPassword) {
         setError("Passwords don't match")
         return
       }
-      console.log('Registering user:', auth)
-      // Later: call register mutation
+  
+      if (!auth.firstName || !auth.lastName || !auth.username || !auth.password) {
+        setError("All fields are required")
+        return
+      }
+  
+      try {
+        const success = await createPerson({
+          firstName: auth.firstName,
+          lastName: auth.lastName,
+          middleName: '', // Optional, not included in form yet
+          username: auth.username,
+          password: auth.password,
+        })
+  
+        if (!success) {
+          setError("Registration failed. Try a different username.")
+        } else {
+          setError(null)
+          setMode('login')
+          setAuth(emptyPerson)
+        }
+      } catch (err) {
+        setError("Something went wrong. Please try again.")
+      }
     } else {
+      // TODO: Call login function and pass JWT to onLogin
       console.log('Logging in user:', auth)
-      // Later: call login mutation and pass jwt to onLogin(jwt)
     }
   }
-
+  
   const buttonStyle: React.CSSProperties = {
     width: '100%',
     padding: '0.75rem',
@@ -40,48 +69,51 @@ export function AuthForm({ onLogin }: AuthFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '300px' }}>
+
+     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '300px' }}>
       <h2>{mode === 'login' ? 'Login' : 'Register'}</h2>
-
+ 
       {mode === 'register' && (
-        <>
-          <input
-            type="text"
-            placeholder="First Name"
-            value={auth.firstName}
-            onChange={e => handleChange('firstName', e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Last Name"
-            value={auth.lastName}
-            onChange={e => handleChange('lastName', e.target.value)}
-          />
-        </>
-      )}
-
-      <input
-        type="text"
-        placeholder="Username"
-        value={auth.username}
-        onChange={e => handleChange('username', e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={auth.password}
-        onChange={e => handleChange('password', e.target.value)}
-      />
-
-      {mode === 'register' && (
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          value={auth.confirmPassword}
-          onChange={e => handleChange('confirmPassword', e.target.value)}
+      <>
+        <Input
+          placeholder="First Name"
+          value={auth.firstName}
+          onChange={val => handleChange('firstName', val)}
         />
-      )}
+        <Input
+          placeholder="Middle Name (optional)"
+          value={auth.middleName}
+          onChange={val => handleChange('middleName', val)}
+        />
+        <Input
+          placeholder="Last Name"
+          value={auth.lastName}
+          onChange={val => handleChange('lastName', val)}
+        />
+      </>
+    )}
 
+    <Input
+      placeholder="Username"
+      value={auth.username}
+      onChange={val => handleChange('username', val)}
+    />
+
+    <Input
+      placeholder="Password"
+      type="password"
+      value={auth.password}
+      onChange={val => handleChange('password', val)}
+    />
+
+    {mode === 'register' && (
+      <Input
+        placeholder="Confirm Password"
+        type="password"
+        value={auth.confirmPassword}
+        onChange={val => handleChange('confirmPassword', val)}
+      />
+    )}
       <button type="submit" style={buttonStyle}>
         {mode === 'login' ? 'Login' : 'Register'}
       </button>

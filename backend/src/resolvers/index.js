@@ -1,6 +1,7 @@
 const { sql, dbConfig } = require('../config/db');
-//import { IResolvers } from '@graphql-tools/utils' 
-// import bcrypt from 'bcrypt'
+const bcrypt = require('bcrypt')
+
+ 
  
 const resolvers = {
   createCrowdsourcedResearch: async ({ companyId, ownershipTypeId, observingPersonId, notes }) => {
@@ -104,16 +105,15 @@ const resolvers = {
       return false;
     }
   }, 
-  registerPerson: async ({ first_name, last_name, middle_name, username, password }) => {
+  createPerson: async ({ firstName, lastName, middleName, username, password }) => {
     try {
-      const hashedPassword = await bcrypt.hash(password, 10)
-      const buffer = Buffer.from(hashedPassword)
-
-      const pool = await sql.connect(dbConfig)
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const buffer = Buffer.from(hashedPassword);
+      const pool = await sql.connect(dbConfig);
       const result = await pool.request()
-        .input('first_name', sql.VarChar(255), first_name)
-        .input('last_name', sql.VarChar(255), last_name)
-        .input('middle_name', sql.VarChar(255), middle_name || '')
+        .input('first_name', sql.VarChar(255), firstName)
+        .input('last_name', sql.VarChar(255), lastName)
+        .input('middle_name', sql.VarChar(255), middleName || '')
         .input('username', sql.VarChar(255), username)
         .input('password', sql.VarBinary(sql.MAX), buffer)
         .execute('insPerson')
