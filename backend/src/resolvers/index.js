@@ -21,7 +21,7 @@ const resolvers = {
       return false;
     }
   },  
-  getCrowdsourcedResearch: async () => {
+  getCrowdsourcedResearch: async () => {  
     try {
       let pool = await sql.connect(dbConfig);
       let result = await pool.request().execute('getCrowdsourcedResearch');

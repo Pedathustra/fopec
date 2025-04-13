@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { createPerson } from '../../graphql/createPerson';
+import {  useState } from 'react';
+import { type CreatePerson, createPerson } from '../../graphql/createPerson';
 import { Input } from '../common/Input';
 
 
@@ -7,13 +7,19 @@ interface AuthFormProps {
   onLogin: (jwt: string) => void
 }
 
+export type CreatePersonWithConfirm = CreatePerson & {
+  confirmPassword: string
+}
+
 
 const emptyPerson = { username: '', password: '', confirmPassword: '', firstName: '', middleName: '', lastName: '' }
 
 export function AuthForm({ onLogin }: AuthFormProps) {
   const [mode, setMode] = useState<'login' | 'register'>('login')
-  const [auth, setAuth] = useState(emptyPerson)
+  const [auth, setAuth] = useState<CreatePersonWithConfirm>(emptyPerson)
   const [error, setError] = useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+
 
   const handleChange = (field: string, value: string) => {
     setAuth(prev => ({ ...prev, [field]: value }))
@@ -37,18 +43,23 @@ export function AuthForm({ onLogin }: AuthFormProps) {
         const success = await createPerson({
           firstName: auth.firstName,
           lastName: auth.lastName,
-          middleName: '', // Optional, not included in form yet
+          middleName: auth.middleName,
           username: auth.username,
           password: auth.password,
         })
   
-        if (!success) {
-          setError("Registration failed. Try a different username.")
-        } else {
-          setError(null)
+     if (!success) {
+        setError("Registration failed. Try a different username.")
+      } else {
+        setError(null)
+        setSuccessMessage("Registration successful! You can now log in.")
+        setTimeout(() => {
+          setSuccessMessage(null)
           setMode('login')
-          setAuth(emptyPerson)
-        }
+          setAuth(prev => ({...emptyPerson, username: prev.username}))
+        }, 2000)
+      }
+
       } catch (err) {
         setError("Something went wrong. Please try again.")
       }
@@ -57,7 +68,7 @@ export function AuthForm({ onLogin }: AuthFormProps) {
       console.log('Logging in user:', auth)
     }
   }
-  
+ 
   const buttonStyle: React.CSSProperties = {
     width: '100%',
     padding: '0.75rem',
@@ -128,7 +139,7 @@ export function AuthForm({ onLogin }: AuthFormProps) {
       >
         {mode === 'login' ? 'Register' : 'Already Registered?'}
       </button>
-
+      {successMessage && <div style={{ color: '#5ef1a5' }}>{successMessage}</div>}
       {error && <div style={{ color: 'red' }}>{error}</div>}
     </form>
   )

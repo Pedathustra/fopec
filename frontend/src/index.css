@@ -53,6 +53,28 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+.input-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.hover-label {
+  position: absolute;
+  top: -1.2rem;
+  left: 0;
+  font-size: 0.75rem;
+  color: #666;
+  background: white;
+  padding: 0 4px;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+.input-wrapper:hover .hover-label {
+  opacity: 1;
+}
 
 @media (prefers-color-scheme: light) {
   :root {
