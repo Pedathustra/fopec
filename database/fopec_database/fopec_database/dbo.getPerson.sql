@@ -8,12 +8,14 @@ create proc getPerson
 		@id int
 as 
 	set nocount on;
- 	select	first_name,
-			last_name,
-			middle_name,
-			username,
-			[password]
-	from person
+ 	select	p.id,
+			p.first_name,
+			p.last_name,
+			p.middle_name,
+			p.username,
+			p.[password],
+			p.is_active
+	from person p
 	where id = @id 
 	return 0
 go

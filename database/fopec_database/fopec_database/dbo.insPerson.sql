@@ -9,7 +9,8 @@ create proc insPerson
 		@last_name varchar(255), 
 		@middle_name varchar(255), 
 		@username varchar(255), 
-		@password varbinary(max)
+		@password varbinary(max),
+		@is_active bit = 1
 as 
 	if exists(select * from person where username = @username)
 	begin 
@@ -22,7 +23,8 @@ as
 		middle_name,
 		username,
 		password,
-		created
+		created,
+		is_active
 	) 
 	values (
 		@first_name,
@@ -30,7 +32,8 @@ as
 		@middle_name,
 		@username,
 		@password,
-		getdate()
+		getdate(),
+		@is_active
 	) 
 	return 0
 go

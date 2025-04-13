@@ -151,11 +151,11 @@ select	c.name
 	,	cr.created
 	,	cr.notes	
 	,	cr.id parent_company_id
-	,	pc.name parent_company_name
+	,	cr.name parent_company_name
 
 from crowdsourced_research cr 
 	join company c on cr.company_id = c.id
-	left join company pc on cr.parent_company_id = pc.id
+	left join company pc on cr.parent_company_id = pc.parent_company_id
 	join ownership_type ot on cr.ownership_type_id = ot.id
 	join person p on cr.observing_person_id = p.id
 
