@@ -1,6 +1,7 @@
 import {  useState } from 'react';
 import { type CreatePerson, createPerson } from '../../graphql/createPerson';
 import { Input } from '../common/Input';
+import { loginPerson } from '../../graphql/loginPerson';
 
 
 interface AuthFormProps {
@@ -64,8 +65,18 @@ export function AuthForm({ onLogin }: AuthFormProps) {
         setError("Something went wrong. Please try again.")
       }
     } else {
-      // TODO: Call login function and pass JWT to onLogin
-      console.log('Logging in user:', auth)
+      try {
+        const result = await loginPerson(auth.username, auth.password)
+    
+        if (!result.success) {
+          setError(result.error || 'Login failed')
+        } else {
+          setError(null)
+          onLogin(result.token!) // ✅ pass token to parent
+        }
+      } catch (err) {
+        setError('Something went wrong during login.')
+      }
     }
   }
  

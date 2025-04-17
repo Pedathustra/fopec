@@ -1,17 +1,7 @@
-const sql = require('mssql');
 
-const dbConfig = {
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  server: process.env.DB_SERVER,
-  database: process.env.DB_DATABASE,
-  options: {
-    encrypt: true,
-    trustServerCertificate: true,
-  },
-};
+const { dbConfig, sql } = require('./config')
 
 module.exports = {
   sql,
   dbConfig
-};
+}

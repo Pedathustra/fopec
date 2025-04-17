@@ -1,7 +1,7 @@
-const { sql, dbConfig } = require('../config/db');
-const bcrypt = require('bcrypt')
+const { sql, dbConfig, jwtSecret } = require('../config/config');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
- 
  
 const resolvers = {
   createCrowdsourcedResearch: async ({ companyId, ownershipTypeId, observingPersonId, notes }) => {
@@ -127,7 +127,45 @@ const resolvers = {
       console.error('Registration error:', err)
       return { success: false, error: 'Internal server error' }
     }
+  },
+  login: async ({ username, password }) => {
+    try {
+      const pool = await sql.connect(dbConfig)
+      const result = await pool.request()
+        .input('username', sql.VarChar(255), username)
+        .execute('loginPerson')
+  
+      const user = result.recordset[0]
+  
+      if (!user) {
+        return { success: false, error: 'Invalid username or password', token: null }
+      }
+  
+      if (!user.is_active) {
+        return { success: false, error: 'Account is inactive', token: null }
+      }
+  
+      const hashedPassword = user.password.toString() 
+      const isMatch = await bcrypt.compare(password, hashedPassword)
+  
+      if (!isMatch) {
+        return { success: false, error: 'Invalid username or password', token: null }
+      }
+  
+      const token = jwt.sign(
+        { id: user.id, username: user.username },
+        jwtSecret,
+        { expiresIn: '24h' } // TODO: add refresh token later & shorten this
+      )
+  
+      return { success: true, error: null, token }
+  
+    } catch (err) {
+      console.error('Login error:', err)
+      return { success: false, error: 'Internal server error', token: null }
+    }
   }
+  
 };
 
 module.exports = resolvers;

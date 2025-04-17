@@ -1,15 +1,17 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CrowdsourcedResearch } from './components/crowdsourcedResearch/CrowdsourcedResearch'
 import { AuthForm } from './components/auth/AuthForm'
-//import { RegisterForm } from './components/auth/RegisterForm'
 import { Menu } from './components/layout/Menu'
+import { AppView } from './types/types'
+import { Vote } from './components/vote/Vote'
+import { Company } from './components/company/Company'
 
 type Page = 'login' | 'register' | 'main'
 
 function App() {
   const [token, setToken] = useState<string | null>(null)
   const [page, setPage] = useState<Page>('login')
-
+  const [view, setView] = useState<AppView>('vote');
   const isAuthenticated = !!token
 
   const logo = (
@@ -19,11 +21,18 @@ function App() {
       style={{ width: '50%', height: '50%', marginLeft: '2rem' }}
     />
   )
-
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token')
+    if (storedToken) {
+      setToken(storedToken)
+      setPage('main')
+    }
+  }, [])
   const renderMainContent = () => {
     if (!isAuthenticated) {
       return page === 'login' ? (
-          <AuthForm onSuccess={(jwt: string) => {
+          <AuthForm onLogin={(jwt: string) => {
+            localStorage.setItem('token', jwt) 
             setToken(jwt)
             setPage('main')
           }} />
@@ -34,12 +43,19 @@ function App() {
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <Menu onSelect={(selection) => {
-          if (selection === 'crowdsourcedResearch') {
-            setPage('main')
-          }
-        }} />
-        <CrowdsourcedResearch />
+        <Menu
+            onLogout={() => {
+              localStorage.removeItem('token')
+              setToken(null)
+              setPage('login')
+            }}
+            onSelect={(selection) => {
+              setView(selection)
+            }}
+        />
+        {view === 'crowdsourcedResearch' && <CrowdsourcedResearch />}
+        {view === 'vote' && <Vote />}
+        {view === 'company' && <Company />}
       </div>
     )
   }

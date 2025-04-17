@@ -29,35 +29,43 @@ type CreatePersonResult {
     description: String  
   }
 
+  type LoginResult {
+  success: Boolean!
+  error: String
+  token: String
+}
+  
   type Query {
     getCrowdsourcedResearch: [ResearchItem]
     getCompanies: [Company]
     getOwnershipTypes: [OwnershipTypes]
   }
 
-    type Mutation {
+  type Mutation {
     deleteCrowdsourcedResearch(id: Int!): Boolean
     updateCrowdsourcedResearch(
         id: Int!
         ownershipTypeId: Int!
         notes: String!
         parentCompanyId: Int
-    ): Boolean
+      ): Boolean
     createCrowdsourcedResearch(
       companyId: Int!
       ownershipTypeId: Int!
       observingPersonId: Int!
       notes: String!
       parentCompanyId: Int
-  ): Boolean
+      ): Boolean
     createPerson(
       firstName: String!
       lastName: String!
       middleName: String
       username: String!
       password: String!
-  ): CreatePersonResult!
+    ): CreatePersonResult!
+    login(username: String!, password: String!): LoginResult!
   }
+    
 `);
 
 module.exports = schema;
