@@ -5,6 +5,7 @@ import { Menu } from './components/layout/Menu'
 import { AppView } from './types/types'
 import { Vote } from './components/vote/Vote'
 import { Company } from './components/company/Company'
+import { Profile } from './components/Profile/Profile'
 
 type Page = 'login' | 'register' | 'main'
 
@@ -42,21 +43,25 @@ function App() {
     }
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div style={{ display: 'flex' }}>
         <Menu
-            onLogout={() => {
-              localStorage.removeItem('token')
-              setToken(null)
-              setPage('login')
-            }}
-            onSelect={(selection) => {
-              setView(selection)
-            }}
+          currentView={view}
+          onSelect={(selection) => setView(selection)}
+          onLogout={() => {
+            localStorage.removeItem('token')
+            setToken(null)
+            setPage('login')
+          }}
         />
-        {view === 'crowdsourcedResearch' && <CrowdsourcedResearch />}
-        {view === 'vote' && <Vote />}
-        {view === 'company' && <Company />}
-      </div>
+        <main style={{ padding: '1rem', flex: 1 }}>
+          {view === 'crowdsourcedResearch' && <CrowdsourcedResearch />}
+          {view === 'vote' && <Vote />}
+          {view === 'company' && <Company />}
+          {view === 'editProfile' && <Profile />}
+        
+        </main>
+</div>
+
     )
   }
 
