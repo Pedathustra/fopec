@@ -1,56 +1,28 @@
+import { AppView } from "../../types/types";
 import { LogoutButton } from "../auth/LoutgoutButton"
 
-
-type AppView = 'vote' | 'company' | 'crowdsourcedResearch' | 'settings'
-
 interface MenuProps {
-  onSelect: (view: AppView) => void
-  onLogout: () => void
-  currentView: AppView
-}
+    onSelect: (view: AppView) => void
+    onLogout: () => void
+  }
+  
+  const menuItems: { label: string; view: AppView }[] = [
+    { label: 'Vote', view: 'vote' },
+    { label: 'Company', view: 'company' },
+    { label: 'Crowdsourced Research', view: 'crowdsourcedResearch' },
+  ]
 
-const menuItems: { label: string; view: AppView }[] = [
-  { label: 'Vote', view: 'vote' },
-  { label: 'Company', view: 'company' },
-  { label: 'Crowdsourced Research', view: 'crowdsourcedResearch' },
-  { label: 'Settings', view: 'settings' },
-]
-
-export function Menu({ onSelect, onLogout, currentView }: MenuProps) {
-  return (
-    <nav
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        width: '200px',
-        padding: '1rem',
-        gap: '1rem',
-        borderRight: '1px solid #ccc',
-        height: '100vh',
-        boxSizing: 'border-box',
-      }}
-    >
-      {menuItems.map((item) => (
-        <button
-          key={item.view}
-          onClick={() => onSelect(item.view)}
-          style={{
-            background: 'none',
-            border: 'none',
-            textAlign: 'left',
-            fontSize: '1rem',
-            color: 'black',
-            cursor: 'pointer',
-            padding: '0.5rem 0',
-            fontWeight: currentView === item.view ? 'bold' : 'normal',
-          }}
-        >
-          {item.label}
-        </button>
-      ))}
-      <div style={{ marginTop: 'auto' }}>
+  export function Menu({ onSelect, onLogout }: MenuProps) {
+    return (
+      <nav style={{ marginBottom: '1rem', display: 'flex', gap: '1rem' }}>
+        {menuItems.map(item => (
+          <button key={item.view} onClick={() => onSelect(item.view)}>
+            {item.label}
+          </button>
+        ))}
         <LogoutButton onLogout={onLogout} />
-      </div>
-    </nav>
-  )
-}
+      </nav>
+    )
+  }
+  
+  
