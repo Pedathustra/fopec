@@ -1,7 +1,8 @@
+import { AppView } from "../../types/types"
 import { LogoutButton } from "../auth/LoutgoutButton"
 
  
-type AppView = 'vote' | 'company' | 'crowdsourcedResearch' | 'settings'
+ 
 
 interface MenuProps {
   onSelect: (view: AppView) => void
