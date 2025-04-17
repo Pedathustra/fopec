@@ -6,6 +6,8 @@ import { AppView } from './types/types'
 import { Vote } from './components/vote/Vote'
 import { Company } from './components/company/Company'
 import { Profile } from './components/Profile/Profile'
+import { Address } from './components/address/Address'
+import { PersonActivity } from './components/personActivity/PersonActivity'
 
 type Page = 'login' | 'register' | 'main'
 
@@ -58,6 +60,8 @@ function App() {
           {view === 'vote' && <Vote />}
           {view === 'company' && <Company />}
           {view === 'editProfile' && <Profile />}
+          {view === 'address' && <Address />}
+          {view === 'personActivity' && <PersonActivity />}
         
         </main>
 </div>

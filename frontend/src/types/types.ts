@@ -10,7 +10,7 @@ export type AddButtonRowProps = {
     colSpan?: number
   }
 
-export type AppView = 'vote' | 'company' | 'crowdsourcedResearch' | 'editProfile';
+export type AppView = 'vote' | 'company' | 'crowdsourcedResearch' | 'editProfile' | 'address' | 'personActivity';
 
 export type ButtonProps = {
     onClick: () => void
