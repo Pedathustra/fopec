@@ -13,7 +13,6 @@ as
 			p.last_name,
 			p.middle_name,
 			p.username,
-			p.[password],
 			p.is_active
 	from person p
 	where id = @id 
