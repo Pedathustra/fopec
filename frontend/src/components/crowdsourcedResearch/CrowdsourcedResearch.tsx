@@ -16,7 +16,7 @@ import { updateCrowdsourcedResearch } from '../../graphql/updateCrowdsourcedRese
 
 export function CrowdsourcedResearch() {
   const [items, setItems] = useState<ResearchItem[]>([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
   const [addingRow, setAddingRow] = useState(false)
   const [editItem, setEditItem] = useState<ResearchItem | null>(null)
 

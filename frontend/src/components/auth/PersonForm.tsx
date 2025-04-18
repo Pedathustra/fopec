@@ -26,12 +26,14 @@ export function PersonForm({ mode, initialData, onSuccess }: PersonFormProps) {
   const [auth, setAuth] = useState({ ...emptyPerson, ...initialData })
   const [error, setError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
-
+  const [loading, setLoading] = useState(true);
   const handleChange = (field: string, value: string) => {
     setAuth((prev) => ({ ...prev, [field]: value }))
   }
-  
-
+  useEffect(()=>{
+    if (mode ==='register')
+      setLoading(false);
+  }, [mode, setLoading]);
   useEffect(() => {
     if (mode === 'update') {
       const token = localStorage.getItem('token')
@@ -49,8 +51,10 @@ export function PersonForm({ mode, initialData, onSuccess }: PersonFormProps) {
               username: data.username,
               }
             })
+            setLoading(false);
           }
         })
+        
       }
     }
   }, [mode])
@@ -107,6 +111,9 @@ export function PersonForm({ mode, initialData, onSuccess }: PersonFormProps) {
     } catch (err) {
       setError('Something went wrong.')
     }
+    finally{
+      setLoading(false);
+    }
   }
 
   const buttonStyle: React.CSSProperties = {
@@ -120,6 +127,10 @@ export function PersonForm({ mode, initialData, onSuccess }: PersonFormProps) {
   }
 
   return (
+    <div style={{ display: 'flex', flex: 1, flexDirection: 'column', alignItems: 'flex-start' }}>
+    {loading ? (
+      <p>Loading...</p>
+    ) : (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '300px' }}>
       <h2>{mode === 'register' ? 'Register' : 'Update Profile'}</h2>
 
@@ -146,5 +157,6 @@ export function PersonForm({ mode, initialData, onSuccess }: PersonFormProps) {
        {successMessage && <div style={{ color: '#5ef1a5' }}>{successMessage}</div>}
       {error && <div style={{ color: 'red' }}>{error}</div>}
     </form>
+    )}</div>
   )
 }

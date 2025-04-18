@@ -67,7 +67,6 @@ useEffect(() => {
             onSuccess={() => setPage('login')}
           />
         ) 
-
       }
       return <></>
     }
