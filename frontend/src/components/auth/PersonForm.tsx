@@ -104,11 +104,16 @@ export function PersonForm({ mode, initialData, onSuccess }: PersonFormProps) {
         {mode === 'register' ? 'Register' : 'Update'}
       </button>
 
-      {mode==='register' && 
-        <button style ={buttonStyle} onClick={()=> window.dispatchEvent(new CustomEvent('triggerLogin'))}>Login</button>
-      }
-
-      {successMessage && <div style={{ color: '#5ef1a5' }}>{successMessage}</div>}
+      {mode === 'register' && (
+      <button
+        type="button"
+        style={buttonStyle}
+        onClick={() => window.dispatchEvent(new CustomEvent('triggerLogin'))}
+      >
+        Login
+      </button>
+    )}
+       {successMessage && <div style={{ color: '#5ef1a5' }}>{successMessage}</div>}
       {error && <div style={{ color: 'red' }}>{error}</div>}
     </form>
   )

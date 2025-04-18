@@ -24,7 +24,20 @@ function App() {
       alt="FOPEC logo"
       style={{ width: '50%', height: '50%', marginLeft: '2rem' }}
     />
-  )
+  )  
+  
+  useEffect(() => {
+    const handleRegister = () => setPage('register')
+    const handleLogin = () => setPage('login')
+  
+    window.addEventListener('triggerRegister', handleRegister)
+    window.addEventListener('triggerLogin', handleLogin)
+  
+    return () => {
+      window.removeEventListener('triggerRegister', handleRegister)
+      window.removeEventListener('triggerLogin', handleLogin)
+    }
+  }, [])
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token')
@@ -33,13 +46,6 @@ function App() {
       setPage('main')
     }
   }, [])
-  
-  useEffect(() => {
-    const handler = () => setPage('register')
-    window.addEventListener('triggerRegister', handler)
-    return () => window.removeEventListener('triggerRegister', handler)
-  }, [])
-
   const renderMainContent = () => {
     if (!isAuthenticated) {
       if (page === 'login') {
@@ -80,6 +86,21 @@ function App() {
           {view === 'vote' && <Vote />}
           {view === 'company' && <Company />}
           {view === 'editProfile' && <Profile />}
+          {/* {view === 'editProfile' && (
+              <PersonForm
+                mode="update"
+                initialData={{
+                  id: userId, // 👈 You need to pull this from decoded JWT or backend
+                  firstName: 'Jane', // ⛔️ Hardcoded for now unless you store user data
+                  lastName: 'Doe',
+                  username: 'janedoe',
+                  middleName: '',
+                }}
+                onSuccess={() => {
+                  setView('vote') // 👈 Or whatever you want after update
+                }}
+              />
+            )} */}
           {view === 'address' && <Address />}
           {view === 'personActivity' && <PersonActivity />}
         </main>
