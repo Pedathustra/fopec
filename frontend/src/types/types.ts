@@ -44,6 +44,18 @@ export type EditButtonProps = {
   label: string  
   onClick: ()=> void //React.Dispatch<React.SetStateAction<ResearchItem | null>>
 }
+export type Person  = {
+  id: number
+  firstName: string
+  lastName: string
+  middleName?: string
+  password?: string 
+  username: string
+  isActive?: boolean
+}
+
+export type CreatePerson = Omit<Person, 'id'>
+
 
 export type OwnershipType = {
   id: number;

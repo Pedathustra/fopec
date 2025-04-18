@@ -1,14 +1,7 @@
+import { Person } from '../types/types';
 import { gqlRequest } from './graphqlClient'
 
-export async function updatePerson(input: {
-  id: number
-  firstName: string
-  lastName: string
-  middleName?: string
-  username: string
-  password: string
-  isActive?: boolean
-}): Promise<{ success: boolean; error?: string }> {
+export async function updatePerson(input:Person): Promise<{ success: boolean; error?: string }> {
   const mutation = `
     mutation UpdatePerson(
       $id: Int!,

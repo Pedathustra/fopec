@@ -17,34 +17,41 @@ type CreatePersonResult {
   success: Boolean!
   error: String
 }
-  type Company {
+type Company {
     id: Int
     name: String
     created: String
     last_updated: String
   }
 
-  type OwnershipTypes{
+type OwnershipTypes{
     id: Int
     description: String  
   }
 
-  type LoginResult {
+type LoginResult {
   success: Boolean!
   error: String
   token: String
 }
   
-
+type Person {
+  id: Int!
+  firstName: String!
+  lastName: String!
+  middleName: String
+  username: String!
+  isActive: Boolean!
+} 
 type UpdatePersonResult {
   success: Boolean!
   error: String
 }
-
-  type Query {
+type Query {
     getCrowdsourcedResearch: [ResearchItem]
     getCompanies: [Company]
     getOwnershipTypes: [OwnershipTypes]
+    getPerson(id: Int!): Person
   }
 
   type Mutation {

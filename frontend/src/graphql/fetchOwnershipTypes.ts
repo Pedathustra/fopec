@@ -1,8 +1,8 @@
-import { OwnershipTypes } from '../types/types'
+import { OwnershipType } from '../types/types'
 import {gqlRequest} from './graphqlClient'
 
 
-export async function fetchOwnershipTypes(): Promise<OwnershipTypes[]> {
+export async function fetchOwnershipTypes(): Promise<OwnershipType[]> {
     const query = `
         query {
             getOwnershipTypes {
@@ -11,7 +11,7 @@ export async function fetchOwnershipTypes(): Promise<OwnershipTypes[]> {
             }
         }`
 
-        const data = await gqlRequest<{getOwnershipTypes: OwnershipTypes[]}> (query)
+        const data = await gqlRequest<{getOwnershipTypes: OwnershipType[]}> (query)
         return data.getOwnershipTypes
     }
 

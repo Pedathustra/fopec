@@ -1,16 +1,19 @@
-import { useState } from 'react'
-import { type CreatePerson, createPerson } from '../../graphql/createPerson'
+import { useEffect, useState } from 'react'
+import {  createPerson } from '../../graphql/createPerson'
 import { updatePerson } from '../../graphql/updatePerson'
 import { Input } from '../common/Input'
-import { loginPerson } from '../../graphql/loginPerson'
+import { CreatePerson } from '../../types/types'
 
+import { getPerson } from '../../graphql/getPerson'
+import { jwtDecode } from 'jwt-decode'
 interface PersonFormProps {
   mode: 'register' | 'update'
   initialData?: Partial<CreatePerson> & { id?: number }
-  onSuccess: (message: string) => void
+  onSuccess? : (message: string) => void
 }
 
-const emptyPerson = {
+export const emptyPerson = {
+  id: -1,
   username: '',
   password: '',
   confirmPassword: '',
@@ -27,6 +30,30 @@ export function PersonForm({ mode, initialData, onSuccess }: PersonFormProps) {
   const handleChange = (field: string, value: string) => {
     setAuth((prev) => ({ ...prev, [field]: value }))
   }
+  
+
+  useEffect(() => {
+    if (mode === 'update') {
+      const token = localStorage.getItem('token')
+      if (token) {
+        const { id } = jwtDecode<{ id: number }>(token)
+        getPerson(id).then((data) => {
+          if (data) {
+            setAuth((prev) => {
+              return {
+              ...prev,
+              id: data.id,
+              firstName: data.firstName,
+              lastName: data.lastName,
+              middleName: data.middleName || '',
+              username: data.username,
+              }
+            })
+          }
+        })
+      }
+    }
+  }, [mode])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -40,11 +67,10 @@ export function PersonForm({ mode, initialData, onSuccess }: PersonFormProps) {
       setError('All fields are required')
       return
     }
-
     try {
       if (mode === 'register') {
         const success = await createPerson({
-          firstName: auth.firstName,
+          firstName: auth.firstName,  
           lastName: auth.lastName,
           middleName: auth.middleName,
           username: auth.username,
@@ -58,12 +84,13 @@ export function PersonForm({ mode, initialData, onSuccess }: PersonFormProps) {
           window.dispatchEvent(new CustomEvent('notifyLoginSuccess'))
           setTimeout(() => {
             setSuccessMessage(null)
-            onSuccess('registered')
+            onSuccess && onSuccess('registered')
           }, 2000)
         }
       } else {
+
         const result = await updatePerson({
-          id: initialData?.id!,
+          id: auth.id!,
           firstName: auth.firstName,
           lastName: auth.lastName,
           middleName: auth.middleName,
@@ -75,7 +102,6 @@ export function PersonForm({ mode, initialData, onSuccess }: PersonFormProps) {
           setError(result.error || 'Update failed')
         } else {
           setSuccessMessage('Profile updated!')
-          onSuccess('updated')
         }
       }
     } catch (err) {

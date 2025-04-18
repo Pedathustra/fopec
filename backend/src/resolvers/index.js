@@ -190,7 +190,31 @@ const resolvers = {
       console.error('Update error:', err)
       return { success: false, error: 'Internal server error' }
     }
+  },
+  getPerson: async ({ id }) => {
+    try {
+      const pool = await sql.connect(dbConfig)
+      const result = await pool.request()
+        .input('id', sql.Int, id)
+        .execute('getPerson')
+  
+      const person = result.recordset[0]
+      if (!person) return null
+  
+      return {
+        id: person.id,
+        firstName: person.first_name,
+        lastName: person.last_name,
+        middleName: person.middle_name,
+        username: person.username,
+        isActive: person.is_active,
+      }
+    } catch (err) {
+      console.error('Error fetching person:', err)
+      return null
+    }
   }
+  
   
 };
 

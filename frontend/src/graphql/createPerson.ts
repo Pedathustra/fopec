@@ -1,15 +1,6 @@
+import { CreatePerson, Person } from '../types/types'
 import { gqlRequest } from './graphqlClient'
 
-export type Person = {
-  id: number
-  firstName: string
-  lastName: string
-  middleName: string
-  username: string
-  password: string
-}
-
-export type CreatePerson = Omit<Person, 'id'>
 
 export async function createPerson(input: CreatePerson): Promise<boolean> {
   const mutation = `

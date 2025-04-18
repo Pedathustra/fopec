@@ -4,7 +4,6 @@ import { Menu } from './components/layout/Menu'
 import { AppView } from './types/types'
 import { Vote } from './components/vote/Vote'
 import { Company } from './components/company/Company'
-import { Profile } from './components/Profile/Profile'
 import { Address } from './components/address/Address'
 import { PersonActivity } from './components/personActivity/PersonActivity'
 import { Login } from './components/auth/Login'
@@ -13,20 +12,20 @@ import { PersonForm } from './components/auth/PersonForm'
 type Page = 'login' | 'register' | 'main'
 
 function App() {
-  const [token, setToken] = useState<string | null>(null)
+  const [token, setToken] = useState<string | null>(null);
   const [page, setPage] = useState<Page>('login')
   const [view, setView] = useState<AppView>('vote')
   const isAuthenticated = !!token
-
+  
   const logo = (
     <img
       src="/FerretOutLogo.png"
       alt="FOPEC logo"
       style={{ width: '50%', height: '50%', marginLeft: '2rem' }}
     />
-  )  
-  
-  useEffect(() => {
+  );
+ 
+useEffect(() => {
     const handleRegister = () => setPage('register')
     const handleLogin = () => setPage('login')
   
@@ -37,15 +36,17 @@ function App() {
       window.removeEventListener('triggerRegister', handleRegister)
       window.removeEventListener('triggerLogin', handleLogin)
     }
-  }, [])
+  }, []);
 
-  useEffect(() => {
+ useEffect(() => {
     const storedToken = localStorage.getItem('token')
     if (storedToken) {
       setToken(storedToken)
       setPage('main')
     }
-  }, [])
+  }, []);
+   
+  
   const renderMainContent = () => {
     if (!isAuthenticated) {
       if (page === 'login') {
@@ -65,11 +66,11 @@ function App() {
             mode="register"
             onSuccess={() => setPage('login')}
           />
-        )
+        ) 
+
       }
       return <></>
     }
-
     return (
       <div style={{ display: 'flex' }}>
         <Menu
@@ -77,37 +78,21 @@ function App() {
           onSelect={(selection) => setView(selection)}
           onLogout={() => {
             localStorage.removeItem('token')
-            setToken(null)
+            setToken(null);
             setPage('login')
           }}
         />
         <main style={{ padding: '1rem', flex: 1 }}>
           {view === 'crowdsourcedResearch' && <CrowdsourcedResearch />}
-          {view === 'vote' && <Vote />}
+          {view === 'vote' && <Vote />}      
           {view === 'company' && <Company />}
-          {view === 'editProfile' && <Profile />}
-          {/* {view === 'editProfile' && (
-              <PersonForm
-                mode="update"
-                initialData={{
-                  id: userId, // 👈 You need to pull this from decoded JWT or backend
-                  firstName: 'Jane', // ⛔️ Hardcoded for now unless you store user data
-                  lastName: 'Doe',
-                  username: 'janedoe',
-                  middleName: '',
-                }}
-                onSuccess={() => {
-                  setView('vote') // 👈 Or whatever you want after update
-                }}
-              />
-            )} */}
+          {view === 'editProfile' && (<PersonForm mode="update"/>)}
           {view === 'address' && <Address />}
           {view === 'personActivity' && <PersonActivity />}
         </main>
       </div>
     )
   }
-
   return (
     <div
       style={{

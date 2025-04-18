@@ -1,5 +1,5 @@
 import { AppView } from "../../types/types"
-import { LogoutButton } from "../auth/LoutgoutButton"
+import { LogoutButton } from "../auth/LogoutButton"
 
  
  
