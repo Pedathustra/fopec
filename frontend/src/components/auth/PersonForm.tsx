@@ -54,7 +54,9 @@ export function PersonForm({ mode, initialData, onSuccess }: PersonFormProps) {
         if (!success) {
           setError('Registration failed. Try a different username.')
         } else {
+          setTimeout(() => setSuccessMessage(null), 3000)
           setSuccessMessage('Registration successful!')
+          window.dispatchEvent(new CustomEvent('notifyLoginSuccess'))
           onSuccess('registered')
         }
       } else {
