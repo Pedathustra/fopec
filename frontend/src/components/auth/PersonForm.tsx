@@ -54,10 +54,12 @@ export function PersonForm({ mode, initialData, onSuccess }: PersonFormProps) {
         if (!success) {
           setError('Registration failed. Try a different username.')
         } else {
-          setTimeout(() => setSuccessMessage(null), 3000)
           setSuccessMessage('Registration successful!')
           window.dispatchEvent(new CustomEvent('notifyLoginSuccess'))
-          onSuccess('registered')
+          setTimeout(() => {
+            setSuccessMessage(null)
+            onSuccess('registered')
+          }, 2000)
         }
       } else {
         const result = await updatePerson({
