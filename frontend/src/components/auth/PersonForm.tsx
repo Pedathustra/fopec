@@ -1,0 +1,115 @@
+import { useState } from 'react'
+import { type CreatePerson, createPerson } from '../../graphql/createPerson'
+import { updatePerson } from '../../graphql/updatePerson'
+import { Input } from '../common/Input'
+import { loginPerson } from '../../graphql/loginPerson'
+
+interface PersonFormProps {
+  mode: 'register' | 'update'
+  initialData?: Partial<CreatePerson> & { id?: number }
+  onSuccess: (message: string) => void
+}
+
+const emptyPerson = {
+  username: '',
+  password: '',
+  confirmPassword: '',
+  firstName: '',
+  middleName: '',
+  lastName: '',
+}
+
+export function PersonForm({ mode, initialData, onSuccess }: PersonFormProps) {
+  const [auth, setAuth] = useState({ ...emptyPerson, ...initialData })
+  const [error, setError] = useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+
+  const handleChange = (field: string, value: string) => {
+    setAuth((prev) => ({ ...prev, [field]: value }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (auth.password !== auth.confirmPassword) {
+      setError("Passwords don't match")
+      return
+    }
+
+    if (!auth.firstName || !auth.lastName || !auth.username || !auth.password) {
+      setError('All fields are required')
+      return
+    }
+
+    try {
+      if (mode === 'register') {
+        const success = await createPerson({
+          firstName: auth.firstName,
+          lastName: auth.lastName,
+          middleName: auth.middleName,
+          username: auth.username,
+          password: auth.password,
+        })
+
+        if (!success) {
+          setError('Registration failed. Try a different username.')
+        } else {
+          setSuccessMessage('Registration successful!')
+          onSuccess('registered')
+        }
+      } else {
+        const result = await updatePerson({
+          id: initialData?.id!,
+          firstName: auth.firstName,
+          lastName: auth.lastName,
+          middleName: auth.middleName,
+          username: auth.username,
+          password: auth.password,
+        })
+
+        if (!result.success) {
+          setError(result.error || 'Update failed')
+        } else {
+          setSuccessMessage('Profile updated!')
+          onSuccess('updated')
+        }
+      }
+    } catch (err) {
+      setError('Something went wrong.')
+    }
+  }
+
+  const buttonStyle: React.CSSProperties = {
+    width: '100%',
+    padding: '0.75rem',
+    fontWeight: 'bold',
+    background: '#1a1a1a',
+    border: 'none',
+    color: 'white',
+    cursor: 'pointer',
+  }
+
+  return (
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '300px' }}>
+      <h2>{mode === 'register' ? 'Register' : 'Update Profile'}</h2>
+
+      <Input placeholder="First Name" value={auth.firstName} onChange={(val) => handleChange('firstName', val)} />
+      <Input placeholder="Middle Name (optional)" value={auth.middleName} onChange={(val) => handleChange('middleName', val)} />
+      <Input placeholder="Last Name" value={auth.lastName} onChange={(val) => handleChange('lastName', val)} />
+      <Input placeholder="Username" value={auth.username} onChange={(val) => handleChange('username', val)} />
+      <Input type="password" placeholder="Password" value={auth.password} onChange={(val) => handleChange('password', val)} />
+      <Input type="password" placeholder="Confirm Password" value={auth.confirmPassword} onChange={(val) => handleChange('confirmPassword', val)} />
+
+      <button type="submit" style={buttonStyle}>
+        {mode === 'register' ? 'Register' : 'Update'}
+      </button>
+
+      {mode==='register' && 
+        <button style ={buttonStyle} onClick={()=> window.dispatchEvent(new CustomEvent('triggerLogin'))}>Login</button>
+      }
+
+      {successMessage && <div style={{ color: '#5ef1a5' }}>{successMessage}</div>}
+      {error && <div style={{ color: 'red' }}>{error}</div>}
+    </form>
+  )
+}

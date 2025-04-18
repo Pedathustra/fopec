@@ -35,6 +35,12 @@ type CreatePersonResult {
   token: String
 }
   
+
+type UpdatePersonResult {
+  success: Boolean!
+  error: String
+}
+
   type Query {
     getCrowdsourcedResearch: [ResearchItem]
     getCompanies: [Company]
@@ -62,8 +68,17 @@ type CreatePersonResult {
       middleName: String
       username: String!
       password: String!
-    ): CreatePersonResult!
+      ): CreatePersonResult!
     login(username: String!, password: String!): LoginResult!
+    updatePerson(
+      id: Int!
+      firstName: String!
+      lastName: String!
+      middleName: String
+      username: String!
+      password: String!
+      isActive: Boolean
+    ): UpdatePersonResult!
   }
     
 `);

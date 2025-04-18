@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { CrowdsourcedResearch } from './components/crowdsourcedResearch/CrowdsourcedResearch'
-import { AuthForm } from './components/auth/AuthForm'
 import { Menu } from './components/layout/Menu'
 import { AppView } from './types/types'
 import { Vote } from './components/vote/Vote'
@@ -8,13 +7,15 @@ import { Company } from './components/company/Company'
 import { Profile } from './components/Profile/Profile'
 import { Address } from './components/address/Address'
 import { PersonActivity } from './components/personActivity/PersonActivity'
+import { Login } from './components/auth/Login'
+import { PersonForm } from './components/auth/PersonForm'
 
 type Page = 'login' | 'register' | 'main'
 
 function App() {
   const [token, setToken] = useState<string | null>(null)
   const [page, setPage] = useState<Page>('login')
-  const [view, setView] = useState<AppView>('vote');
+  const [view, setView] = useState<AppView>('vote')
   const isAuthenticated = !!token
 
   const logo = (
@@ -24,6 +25,7 @@ function App() {
       style={{ width: '50%', height: '50%', marginLeft: '2rem' }}
     />
   )
+
   useEffect(() => {
     const storedToken = localStorage.getItem('token')
     if (storedToken) {
@@ -31,17 +33,35 @@ function App() {
       setPage('main')
     }
   }, [])
+  
+  useEffect(() => {
+    const handler = () => setPage('register')
+    window.addEventListener('triggerRegister', handler)
+    return () => window.removeEventListener('triggerRegister', handler)
+  }, [])
+
   const renderMainContent = () => {
     if (!isAuthenticated) {
-      return page === 'login' ? (
-          <AuthForm onLogin={(jwt: string) => {
-            localStorage.setItem('token', jwt) 
-            setToken(jwt)
-            setPage('main')
-          }} />
-      ) : (
-        <></>
-      )
+      if (page === 'login') {
+        return (
+          <Login
+            onLogin={(jwt: string) => {
+              localStorage.setItem('token', jwt)
+              setToken(jwt)
+              setPage('main')
+            }}
+          />
+        )
+      }
+      if (page === 'register') {
+        return (
+          <PersonForm
+            mode="register"
+            onSuccess={() => setPage('login')}
+          />
+        )
+      }
+      return <></>
     }
 
     return (
@@ -62,22 +82,22 @@ function App() {
           {view === 'editProfile' && <Profile />}
           {view === 'address' && <Address />}
           {view === 'personActivity' && <PersonActivity />}
-        
         </main>
-</div>
-
+      </div>
     )
   }
 
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'flex-start',
-      justifyContent: 'flex-start',
-      padding: '1rem',
-      flex: 1,
-    }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        padding: '1rem',
+        flex: 1,
+      }}
+    >
       <div style={{ flex: 1 }}>{renderMainContent()}</div>
       {logo}
     </div>

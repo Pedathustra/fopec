@@ -164,6 +164,32 @@ const resolvers = {
       console.error('Login error:', err)
       return { success: false, error: 'Internal server error', token: null }
     }
+  },
+  updatePerson: async ({ id, firstName, lastName, middleName, username, password, isActive = true }) => {
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10)
+      const buffer = Buffer.from(hashedPassword)
+  
+      const pool = await sql.connect(dbConfig)
+      const result = await pool.request()
+        .input('id', sql.Int, id)
+        .input('first_name', sql.VarChar(255), firstName)
+        .input('last_name', sql.VarChar(255), lastName)
+        .input('middle_name', sql.VarChar(255), middleName || '')
+        .input('username', sql.VarChar(255), username)
+        .input('password', sql.VarBinary(sql.MAX), buffer)
+        .input('is_active', sql.Bit, isActive ? 1 : 0)
+        .execute('updPerson')
+  
+      if (result.returnValue === -1) {
+        return { success: false, error: 'Username already exists' }
+      }
+  
+      return { success: true, error: null }
+    } catch (err) {
+      console.error('Update error:', err)
+      return { success: false, error: 'Internal server error' }
+    }
   }
   
 };
