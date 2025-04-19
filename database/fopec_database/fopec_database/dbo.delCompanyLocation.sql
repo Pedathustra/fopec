@@ -1,19 +1,18 @@
-if exists(select * from sys.procedures where name = 'delAddress')
+if exists(select * from sys.procedures where name = 'delCompanyLocation')
 begin
-	drop proc delAddress;
+	drop proc delCompanyLocation;
 end
 go
 
-create proc delAddress
-	@id int
+create proc delCompanyLocation
+	@company_id int,
+	@address_id int
+
 as 
 	set nocount on;
 
-	if exists(select * from company_location where address_id = @id)
-	begin 
-		return 1
-	end
-
-	delete from address where id = @id;
-
+	delete 
+	from company_location
+	where	company_id = @company_id
+		and	address_id = @address_id;
 go

@@ -6,10 +6,29 @@ go
 
 create proc insCompanyLocation
 	@company_id int,
-	@address_id
+	@address_id int
 as 
 	set nocount on;
+	if exists(
+		select * 
+		from company_location
+		where company_id = @company_id
+			and address_id = @address_id 
+	)
+	begin
+		return -1
+	end
+	   		
+	insert into company_location(
+		company_id,
+		address_id
+	)
+	values (
+		@company_id,
+		@address_id
+		)
 
+		return 0;
  
 
 go

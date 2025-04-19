@@ -15,4 +15,4 @@ begin
 end 
 go 
 
-exec getOwnershipTypes;
+ 
