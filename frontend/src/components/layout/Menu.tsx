@@ -11,12 +11,12 @@ interface MenuProps {
 }
 
 const menuItems: { label: string; view: AppView }[] = [
-  { label: 'Vote', view: 'vote' },
+  { label: 'Address', view: 'address' },
   { label: 'Company', view: 'company' },
   { label: 'Crowdsourced Research', view: 'crowdsourcedResearch' },
+  { label: 'Vote', view: 'vote' },
   { label: 'Edit Profile', view: 'editProfile' },
   { label: 'Account Activity', view: 'personActivity' },
-  { label: 'Address', view: 'address' },
 ]
 
 export function Menu({ onSelect, onLogout, currentView }: MenuProps) {

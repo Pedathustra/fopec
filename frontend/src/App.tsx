@@ -82,11 +82,11 @@ useEffect(() => {
           }}
         />
         <main style={{ padding: '1rem', flex: 1 }}>
-          {view === 'crowdsourcedResearch' && <CrowdsourcedResearch />}
-          {view === 'vote' && <Vote />}      
-          {view === 'company' && <Company />}
-          {view === 'editProfile' && (<PersonForm mode="update"/>)}
           {view === 'address' && <Address />}
+          {view === 'company' && <Company />}
+          {view === 'crowdsourcedResearch' && <CrowdsourcedResearch />}
+          {view === 'vote' && <Vote />}        
+          {view === 'editProfile' && (<PersonForm mode="update"/>)}
           {view === 'personActivity' && <PersonActivity />}
         </main>
       </div>
