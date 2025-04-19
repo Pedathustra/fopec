@@ -8,8 +8,8 @@ begin
 end 
 go
 
-create proc getCompanies 
-
+create proc getCompaniesByPersonCreatedID
+	@person_id_created int
 as
 begin
 	set nocount on;
@@ -18,7 +18,9 @@ begin
 		,	created
 		,	last_updated
 		,	person_id_created
-	from company;
+	from company
+	where person_id_created = @person_id_created;
+	;
 end 
 go 
 
