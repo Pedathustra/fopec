@@ -10,14 +10,22 @@ go
 
 create proc updCompany 
 	@id int,
-	@name varchar(255)
+	@name varchar(255),
+	@person_id int
 as
 begin
 	set nocount on;
+
+	if not exists (select 1 from company where person_id_created = @person_id)
+	begin 
+		return -1
+	end
+
+
 	update company
 	set name = @name
 	where id = @id 
-
+	return 0;
 end 
 go 
 

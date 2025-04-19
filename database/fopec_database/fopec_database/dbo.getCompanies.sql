@@ -17,7 +17,7 @@ begin
 		,	name
 		,	created
 		,	last_updated
-		,	person_id_created
+		--,	person_id_created
 	from company;
 end 
 go 
