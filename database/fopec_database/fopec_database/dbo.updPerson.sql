@@ -13,7 +13,12 @@ create proc updPerson
 		@password varbinary(max),
 		@is_active bit = 1
 as 
-	if exists(select * from person where username = @username)
+	if exists(
+		select * 
+		from person 
+		where id != @id
+			and username = @username
+		)
 	begin 
 		return -1
 	end 
