@@ -11,6 +11,7 @@ import { createCompany } from '../../graphql/createCompany';
 import { updateCompany } from '../../graphql/updateCompany';
 import { deleteCompany } from '../../graphql/deleteCompany';
 import { usePersonId } from '../../hooks/usePersonId';
+import { formatDate } from '../../utils/formatDate';
 
 const emptyCompany = {
   name: '',
@@ -109,8 +110,8 @@ export function CompanyManager() {
             }}
           />
         </TableCell>
-        <TableCell>{item.created}</TableCell>
-        <TableCell>{item.lastUpdated}</TableCell>
+        <TableCell>{formatDate(item.created)}</TableCell>
+        <TableCell>{formatDate(item.lastUpdated)}</TableCell>
         <TableCell>
           <DeleteButton onClick={() => handleDelete(item.id)} />
         </TableCell>
