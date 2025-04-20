@@ -17,3 +17,6 @@ as
 		and	address_id = @address_id;
 	return 0;
 go
+
+
+--select * from company_location where company_id = 111 and address_id = 55
