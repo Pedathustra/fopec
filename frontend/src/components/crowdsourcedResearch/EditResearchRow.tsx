@@ -1,10 +1,10 @@
-import React from 'react'
-import { TableCell } from './TableCell'
-import CompanySelect from '../common/CompanySelect'
-import OwnershipTypeSelect from '../common/OwnershipTypeSelect'
-import AddButton from './AddButton'
-import { ResearchEditRowProps } from '../../types/types'
-import { CancelButton } from './CancelButton'
+import React from 'react';
+import { TableCell } from '../common/TableCell';
+import CompanySelect from '../common/CompanySelect';
+import OwnershipTypeSelect from '../common/OwnershipTypeSelect';
+import { AddButton } from '../common/AddButton';
+import { ResearchEditRowProps } from '../../types/types';
+import { CancelButton } from '../common/CancelButton';
 
 const ResearchEditRow: React.FC<ResearchEditRowProps> = ({
   value,
@@ -12,7 +12,7 @@ const ResearchEditRow: React.FC<ResearchEditRowProps> = ({
   onSave,
   companies,
   ownershipTypes,
-  onCancel
+  onCancel,
 }) => {
   return (
     <tr>
@@ -42,19 +42,19 @@ const ResearchEditRow: React.FC<ResearchEditRowProps> = ({
       </TableCell>
       <TableCell>
         <CompanySelect
-          value={value.parentCompanyId === null ? '' : value.parentCompanyId }
+          value={value.parentCompanyId === null ? '' : value.parentCompanyId}
           onChange={(val) => onChange('parentCompanyId', val)}
           companies={companies}
         />
       </TableCell>
       <TableCell>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <AddButton onClick={onSave} />
-            <CancelButton onClick={onCancel} />
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <AddButton onClick={onSave} />
+          <CancelButton onClick={onCancel} />
         </div>
       </TableCell>
     </tr>
-  )
-}
+  );
+};
 
-export default ResearchEditRow
+export default ResearchEditRow;

@@ -1,7 +1,7 @@
 const { buildSchema } = require('graphql');
 
 const schema = buildSchema(`
-  type ResearchItem {
+type ResearchItem {
     crowdsourcedId: Int
     companyId: Int
     companyName: String
@@ -13,6 +13,22 @@ const schema = buildSchema(`
     notes: String
     parentCompanyName: String
   }
+ type Address {
+  id: Int!
+  line1: String!
+  line2: String
+  city: String!
+  state: String!
+  zip: String!
+}
+
+input AddressInput {
+  line1: String!
+  line2: String
+  city: String!
+  state: String!
+  zip: String!
+}   
 type CreatePersonResult {
   success: Boolean!
   error: String
@@ -48,6 +64,7 @@ type UpdatePersonResult {
   error: String
 }
 type Query {
+    getAddresses: [Address!]!
     getCrowdsourcedResearch: [ResearchItem]
     getCompanies: [Company]
     getOwnershipTypes: [OwnershipTypes]
@@ -86,10 +103,25 @@ type Query {
       password: String!
       isActive: Boolean
     ): UpdatePersonResult!
+    insertAddress(
+      line1: String!
+      line2: String
+      city: String!
+      state: String!
+      zip: String!
+  ): Int!
+  updateAddress(
+      id: Int!
+      line1: String!
+      line2: String
+      city: String!
+      state: String!
+      zip: String!
+  ): Int!
+
+  deleteAddress(id: Int!): Int!
   }
     
 `);
 
 module.exports = schema;
- 
-

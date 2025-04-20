@@ -1,13 +1,13 @@
-import React from 'react'
-import { AddButtonProps } from '../../types/types'
+import React from 'react';
+import { AddButtonProps } from '../../types/types';
 
-const AddButton: React.FC<AddButtonProps> = ({ onClick }) => (
+export const AddButton: React.FC<AddButtonProps> = ({ onClick }) => (
   <button
     onClick={onClick}
     style={{
       background: 'none',
       border: 'none',
-      cursor: 'pointer'
+      cursor: 'pointer',
     }}
     aria-label="Save"
     title="Save"
@@ -28,6 +28,4 @@ const AddButton: React.FC<AddButtonProps> = ({ onClick }) => (
       <polyline points="7 3 7 8 15 8" />
     </svg>
   </button>
-)
-
-export default AddButton
+);
