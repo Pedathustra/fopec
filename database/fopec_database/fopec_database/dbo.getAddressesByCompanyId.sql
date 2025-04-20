@@ -21,10 +21,11 @@ begin
 		,	a.zip
 		,	cl.isHQ
 	from address a
-		join company_location cl on a.id = cl.company_id
+		join company_location cl on a.id = cl.address_id
 	where cl.company_id = @companyId 
 				
 	;
 end 
 go 
+exec getAddressesByCompanyId 111
 
