@@ -5,11 +5,11 @@ end
 go
 
 create proc getAddresses
-	@id int
+
 as 
 	set nocount on;
 
-	select id,
+	select	id,
 			line1,
 			line2,
 			city,
