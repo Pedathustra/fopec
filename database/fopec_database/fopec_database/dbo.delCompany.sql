@@ -29,12 +29,7 @@ begin
 			return -1;
 		end 
 
-	if not exists (select 1 from company where person_id_created = @person_id)
-	begin 
-		return -1
-	end
-
-
+ 
 	delete company where id = @id ;
 	return 0;
 end 
