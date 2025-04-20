@@ -10,8 +10,8 @@ export async function fetchCompaniesByPersonId(
         id
         name
         created
-        last_updated
-        person_id_created
+        lastUpdated
+        personIdCreated
       }
     }
   `;

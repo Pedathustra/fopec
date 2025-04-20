@@ -41,8 +41,8 @@ type Company {
   id: Int!
   name: String!
   created: String!
-  last_updated: String!
-  person_id_created: Int!
+  lastUpdated: String!
+  personIdCreated: Int!
 }
  
 type CreatePersonResult {
@@ -133,9 +133,9 @@ type Query {
   ): Int!
 
   deleteAddress(id: Int!): Int!
-  insertCompany(name: String!, person_id_created: Int!): Int!
-  updateCompany(id: Int!, name: String!, person_id: Int!): Int!
-  deleteCompany(id: Int!, person_id: Int!): Int!
+  insertCompany(name: String!, personIdCreated: Int!): Int!
+  updateCompany(id: Int!, name: String!): Int!
+  deleteCompany(id: Int!): Int!
 
   addCompanyAddress(companyId: Int!, addressId: Int!, isHQ: Boolean!): Int!
   deleteCompanyAddress(companyId: Int!, addressId: Int!): Int!

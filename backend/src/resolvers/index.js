@@ -71,8 +71,8 @@ const resolvers = {
         id: row.id,
         name: row.name,
         created: row.created,
-        last_updated: row.last_updated,
-        person_id_created: row.person_id_created,
+        lastUpdated: row.last_updated,
+        personIdCreated: row.person_id_created,
       }));
     } catch (error) {
       console.error('Error executing stored procedure getCompanies', error);
@@ -337,14 +337,14 @@ const resolvers = {
       throw new Error('Failed to fetch address data');
     }
   },
-  insertCompany: async ({ name, person_id_created }) => {
+  insertCompany: async ({ name, personIdCreated }) => {
     try {
       let pool = await sql.connect(dbConfig);
       const request = pool.request();
 
       request
         .input('name', sql.VarChar(255), name)
-        .input('person_id_created', sql.Int, person_id_created);
+        .input('person_id_created', sql.Int, personIdCreated);
 
       const result = await request.execute('insCompany');
       return result.returnValue;
@@ -353,15 +353,12 @@ const resolvers = {
       throw new Error('Insert failed');
     }
   },
-  updateCompany: async ({ id, name, person_id }) => {
+  updateCompany: async ({ id, name }) => {
     try {
       let pool = await sql.connect(dbConfig);
       const request = pool.request();
 
-      request
-        .input('id', sql.Int, id)
-        .input('name', sql.VarChar(255), name)
-        .input('person_id', sql.Int, person_id);
+      request.input('id', sql.Int, id).input('name', sql.VarChar(255), name);
 
       const result = await request.execute('updCompany');
       return result.returnValue;
@@ -370,12 +367,12 @@ const resolvers = {
       throw new Error('Update failed');
     }
   },
-  deleteCompany: async ({ id, person_id }) => {
+  deleteCompany: async ({ id }) => {
     try {
       let pool = await sql.connect(dbConfig);
       const request = pool.request();
 
-      request.input('id', sql.Int, id).input('person_id', sql.Int, person_id);
+      request.input('id', sql.Int, id);
 
       const result = await request.execute('delCompany');
       return result.returnValue;

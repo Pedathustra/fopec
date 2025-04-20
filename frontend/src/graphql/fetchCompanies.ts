@@ -8,8 +8,8 @@ export async function fetchCompanies(): Promise<Company[]> {
                 id
                 name
                 created
-                last_updated
-                person_id_created
+                lastUpdated
+                personIdCreated
             }
         }`;
 

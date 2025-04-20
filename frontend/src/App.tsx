@@ -3,7 +3,7 @@ import { CrowdsourcedResearch } from './components/crowdsourcedResearch/Crowdsou
 import { Menu } from './components/layout/Menu';
 import { AppView } from './types/types';
 import { Vote } from './components/vote/Vote';
-import { Company } from './components/company/Company';
+import { CompanyManager } from './components/company/CompanyManager';
 import { AddressManager } from './components/address/AddressManager';
 import { PersonActivity } from './components/personActivity/PersonActivity';
 import { Login } from './components/auth/Login';
@@ -79,7 +79,7 @@ function App() {
         />
         <main style={{ padding: '1rem', flex: 1 }}>
           {view === 'address' && <AddressManager />}
-          {view === 'company' && <Company />}
+          {view === 'company' && <CompanyManager />}
           {view === 'crowdsourcedResearch' && <CrowdsourcedResearch />}
           {view === 'vote' && <Vote />}
           {view === 'editProfile' && <PersonForm mode="update" />}

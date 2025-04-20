@@ -40,10 +40,11 @@ export type CancelButtonProps = {
 };
 
 export type Company = {
-  id: string;
+  id: number;
   name: string;
   created: string;
-  last_updated: string;
+  lastUpdated: string;
+  personIdCreated: number;
 };
 
 export type CompanySelectProps = {
