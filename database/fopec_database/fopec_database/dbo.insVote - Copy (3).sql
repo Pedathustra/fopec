@@ -7,7 +7,7 @@ go
 create proc getVoteTypes
 
 as 
-	set nocount on;
+	
 	select vote_type
 	from vote_type
 	
