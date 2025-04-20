@@ -72,10 +72,25 @@ const resolvers = {
         name: row.name,
         created: row.created,
         last_updated: row.last_updated,
+        person_id_created: row.person_id_created,
       }));
     } catch (error) {
       console.error('Error executing stored procedure getCompanies', error);
       return false;
+    }
+  },
+  getCompaniesByPersonCreatedID: async ({ personId }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      let result = await pool
+        .request()
+        .input('person_id_created', sql.Int, personId)
+        .execute('getCompaniesByPersonCreatedID');
+
+      return result.recordset;
+    } catch (err) {
+      console.error('Error executing getCompaniesByPersonCreatedID:', err);
+      throw new Error('Failed to fetch companies by person');
     }
   },
   getOwnershipTypes: async () => {
@@ -320,6 +335,149 @@ const resolvers = {
     } catch (error) {
       console.error('Error executing getAddresses:', error);
       throw new Error('Failed to fetch address data');
+    }
+  },
+  insertCompany: async ({ name, person_id_created }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const request = pool.request();
+
+      request
+        .input('name', sql.VarChar(255), name)
+        .input('person_id_created', sql.Int, person_id_created);
+
+      const result = await request.execute('insCompany');
+      return result.returnValue;
+    } catch (err) {
+      console.error('Error inserting company:', err);
+      throw new Error('Insert failed');
+    }
+  },
+  updateCompany: async ({ id, name, person_id }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const request = pool.request();
+
+      request
+        .input('id', sql.Int, id)
+        .input('name', sql.VarChar(255), name)
+        .input('person_id', sql.Int, person_id);
+
+      const result = await request.execute('updCompany');
+      return result.returnValue;
+    } catch (err) {
+      console.error('Error updating company:', err);
+      throw new Error('Update failed');
+    }
+  },
+  deleteCompany: async ({ id, person_id }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const request = pool.request();
+
+      request.input('id', sql.Int, id).input('person_id', sql.Int, person_id);
+
+      const result = await request.execute('delCompany');
+      return result.returnValue;
+    } catch (err) {
+      console.error('Error deleting company:', err);
+      throw new Error('Delete failed');
+    }
+  },
+  getAddressesByCompanyId: async ({ companyId }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const result = await pool
+        .request()
+        .input('companyId', sql.Int, companyId)
+        .execute('getAddressesByCompanyId');
+
+      return result.recordset.map((row) => ({
+        id: row.id,
+        line1: row.line1,
+        line2: row.line2,
+        city: row.city,
+        state: row.state,
+        zip: row.zip,
+        isHQ: row.isHQ,
+      }));
+    } catch (err) {
+      console.error('Error fetching company addresses:', err);
+      throw new Error('Failed to fetch addresses');
+    }
+  },
+  addCompanyAddress: async ({ companyId, addressId, isHQ }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const result = await pool
+        .request()
+        .input('company_id', sql.Int, companyId)
+        .input('address_id', sql.Int, addressId)
+        .input('isHQ', sql.Bit, isHQ)
+        .execute('insCompanyLocation');
+
+      return result.returnValue;
+    } catch (err) {
+      console.error('Error adding address to company:', err);
+      throw new Error('Add failed');
+    }
+  },
+  deleteCompanyAddress: async ({ companyId, addressId }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const result = await pool
+        .request()
+        .input('company_id', sql.Int, companyId)
+        .input('address_id', sql.Int, addressId)
+        .execute('delCompanyLocation');
+
+      return result.returnValue;
+    } catch (err) {
+      console.error('Error deleting company address:', err);
+      throw new Error('Delete failed');
+    }
+  },
+  getBusinessFocusesByCompanyId: async ({ companyId }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const result = await pool
+        .request()
+        .input('company_id', sql.Int, companyId)
+        .execute('getBusinessFocusesByCompanyId');
+
+      return result.recordset;
+    } catch (err) {
+      console.error('Error fetching business focuses:', err);
+      throw new Error('Failed to fetch business focuses');
+    }
+  },
+  addCompanyBusinessFocus: async ({ companyId, businessFocusId }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const result = await pool
+        .request()
+        .input('company_id', sql.Int, companyId)
+        .input('business_focus_id', sql.Int, businessFocusId)
+        .execute('insCompanyBusinessFocus');
+
+      return result.returnValue;
+    } catch (err) {
+      console.error('Error adding business focus to company:', err);
+      throw new Error('Add failed');
+    }
+  },
+  deleteCompanyBusinessFocus: async ({ companyId, businessFocusId }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const result = await pool.request().query(`
+          delete from company_business_focus 
+          where company_id = ${companyId} and business_focus_id = ${businessFocusId}
+        `);
+
+      return 0;
+    } catch (err) {
+      console.error('Error deleting business focus from company:', err);
+      throw new Error('Delete failed');
     }
   },
 };

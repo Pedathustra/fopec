@@ -20,7 +20,9 @@ type ResearchItem {
   city: String!
   state: String!
   zip: String!
+  isHQ: Boolean
 }
+
 
 input AddressInput {
   line1: String!
@@ -29,20 +31,28 @@ input AddressInput {
   state: String!
   zip: String!
 }   
+
+type BusinessFocus {
+  id: Int!
+  description: String!
+}
+
+type Company {
+  id: Int!
+  name: String!
+  created: String!
+  last_updated: String!
+  person_id_created: Int!
+}
+ 
 type CreatePersonResult {
   success: Boolean!
   error: String
 }
-type Company {
-    id: Int
-    name: String
-    created: String
-    last_updated: String
-  }
-
+ 
 type OwnershipTypes{
-    id: Int
-    description: String  
+    id: Int!
+    description: String!
   }
 
 type LoginResult {
@@ -65,8 +75,11 @@ type UpdatePersonResult {
 }
 type Query {
     getAddresses: [Address!]!
+    getAddressesByCompanyId(companyId: Int!): [Address!]!
+    getBusinessFocusesByCompanyId(companyId: Int!): [BusinessFocus!]!
     getCrowdsourcedResearch: [ResearchItem]
     getCompanies: [Company]
+    getCompaniesByPersonId(personId: Int!): [Company!]!
     getOwnershipTypes: [OwnershipTypes]
     getPerson(id: Int!): Person
   }
@@ -120,6 +133,15 @@ type Query {
   ): Int!
 
   deleteAddress(id: Int!): Int!
+  insertCompany(name: String!, person_id_created: Int!): Int!
+  updateCompany(id: Int!, name: String!, person_id: Int!): Int!
+  deleteCompany(id: Int!, person_id: Int!): Int!
+
+  addCompanyAddress(companyId: Int!, addressId: Int!, isHQ: Boolean!): Int!
+  deleteCompanyAddress(companyId: Int!, addressId: Int!): Int!
+
+  addCompanyBusinessFocus(companyId: Int!, businessFocusId: Int!): Int!
+  deleteCompanyBusinessFocus(companyId: Int!, businessFocusId: Int!): Int!
   }
     
 `);
