@@ -1,19 +1,18 @@
-import { Company } from '../types/types'
-import {gqlRequest} from './graphqlClient'
-
+import { Company } from '../types/types';
+import { gqlRequest } from './graphqlClient';
 
 export async function fetchCompanies(): Promise<Company[]> {
-    const query = `
+  const query = `
         query {
             getCompanies {
                 id
                 name
                 created
                 last_updated
+                person_id_created
             }
-        }`
+        }`;
 
-        const data = await gqlRequest<{getCompanies: Company[]}> (query)
-        return data.getCompanies
-    }
-
+  const data = await gqlRequest<{ getCompanies: Company[] }>(query);
+  return data.getCompanies;
+}

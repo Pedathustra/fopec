@@ -26,6 +26,11 @@ export type AppView =
   | 'address'
   | 'personActivity';
 
+export type BusinessFocus = {
+  id: number;
+  description: string;
+};
+
 export type ButtonProps = {
   onClick: () => void;
 };
