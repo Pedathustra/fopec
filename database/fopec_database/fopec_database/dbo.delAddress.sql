@@ -11,9 +11,11 @@ as
 
 	if exists(select * from company_location where address_id = @id)
 	begin 
-		return 1
+		return 1;
 	end
 
 	delete from address where id = @id;
+
+	return 0;
 
 go

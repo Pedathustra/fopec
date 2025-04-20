@@ -26,6 +26,8 @@ as
 			@city,
 			@state, 
 			@zip
-		)
+		);
+
+	return 0;
 
 go

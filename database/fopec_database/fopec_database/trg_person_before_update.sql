@@ -33,3 +33,4 @@ begin
 	from deleted;
 end
 go
+

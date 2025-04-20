@@ -15,4 +15,5 @@ as
 	from company_location
 	where	company_id = @company_id
 		and	address_id = @address_id;
+	return 0;
 go
