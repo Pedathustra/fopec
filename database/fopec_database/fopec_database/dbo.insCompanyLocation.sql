@@ -6,7 +6,8 @@ go
 
 create proc insCompanyLocation
 	@company_id int,
-	@address_id int
+	@address_id int,
+	@isHQ bit
 as 
 	set nocount on;
 	if exists(
@@ -21,11 +22,13 @@ as
 	   		
 	insert into company_location(
 		company_id,
-		address_id
+		address_id,
+		isHQ
 	)
 	values (
 		@company_id,
-		@address_id
+		@address_id,
+		@isHQ
 		)
 
 		return 0;
