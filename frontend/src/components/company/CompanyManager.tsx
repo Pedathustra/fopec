@@ -12,6 +12,7 @@ import { deleteCompany } from '../../graphql/deleteCompany';
 import { usePersonId } from '../../hooks/usePersonId';
 import { formatDate } from '../../utils/formatDate';
 import { fetchCompaniesByPersonId } from '../../graphql/fetchCompaniesByPersonId';
+import { CompanyDetailsRow } from './CompanyDetailsRow';
 
 const emptyCompany = {
   name: '',
@@ -23,6 +24,9 @@ export function CompanyManager() {
   const [loading, setLoading] = useState(true);
   const [addingRow, setAddingRow] = useState(false);
   const [editItem, setEditItem] = useState<Company | null>(null);
+  const [expandedCompanyId, setExpandedCompanyId] = useState<number | null>(
+    null
+  );
 
   const [newEntry, setNewEntry] =
     useState<Omit<Company, 'id' | 'created' | 'lastUpdated'>>(emptyCompany);
@@ -35,7 +39,6 @@ export function CompanyManager() {
   const refetch = useCallback(async () => {
     const data = personId && (await fetchCompaniesByPersonId(personId));
     if (data) setCompanies(data);
-    console.log('personId', personId, 'with data', data);
   }, [personId]);
 
   useEffect(() => {
@@ -88,20 +91,34 @@ export function CompanyManager() {
       alert('Failed to update company');
     }
   };
-  const displayData = companies.map((item, idx) =>
-    editItem?.id === item.id ? (
-      <CompanyEditRow
-        key={idx}
-        value={editableRowData}
-        onChange={(field, val) =>
-          setEditableRowData({ ...editableRowData, [field]: val })
-        }
-        onSave={() => handleUpdate()}
-        onCancel={() => setEditItem(null)}
-      />
-    ) : (
-      <tr key={idx}>
+  const displayData = companies.flatMap((item) => {
+    if (editItem?.id === item.id) {
+      return [
+        <CompanyEditRow
+          key={`edit-${item.id}`}
+          value={editableRowData}
+          onChange={(field, val) =>
+            setEditableRowData({ ...editableRowData, [field]: val })
+          }
+          onSave={() => handleUpdate()}
+          onCancel={() => setEditItem(null)}
+        />,
+      ];
+    }
+
+    const baseRow = (
+      <tr key={`company-${item.id}`}>
         <TableCell>
+          <span
+            style={{ cursor: 'pointer' }}
+            onClick={() =>
+              setExpandedCompanyId(
+                expandedCompanyId === item.id ? null : item.id
+              )
+            }
+          >
+            {expandedCompanyId === item.id ? '▼' : '▶'}
+          </span>{' '}
           <EditButton
             label={item.name}
             onClick={() => {
@@ -116,8 +133,29 @@ export function CompanyManager() {
           <DeleteButton onClick={() => handleDelete(item.id)} />
         </TableCell>
       </tr>
-    )
-  );
+    );
+
+    const expandedRow =
+      expandedCompanyId === item.id ? (
+        <tr key={`details-${item.id}`}>
+          <td colSpan={4}>
+            <div
+              style={{
+                padding: '1rem',
+                backgroundColor: '#2a2a2a', // dark gray
+                color: '#eee',
+                border: '1px solid #444',
+                borderRadius: '4px',
+              }}
+            >
+              <CompanyDetailsRow companyId={item.id} onUpdate={refetch} />
+            </div>
+          </td>
+        </tr>
+      ) : null;
+
+    return [baseRow, expandedRow].filter(Boolean);
+  });
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
