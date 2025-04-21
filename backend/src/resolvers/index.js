@@ -79,15 +79,21 @@ const resolvers = {
       return false;
     }
   },
-  getCompaniesByPersonCreatedID: async ({ personId }) => {
+  getCompaniesByPersonId: async ({ personId }) => {
     try {
       let pool = await sql.connect(dbConfig);
       let result = await pool
         .request()
         .input('person_id_created', sql.Int, personId)
         .execute('getCompaniesByPersonCreatedID');
-
-      return result.recordset;
+      console.log('result', result);
+      return result.recordset.map((row) => ({
+        id: row.id,
+        name: row.name,
+        created: row.created,
+        lastUpdated: row.last_updated,
+        personIdCreated: row.person_id_created,
+      }));
     } catch (err) {
       console.error('Error executing getCompaniesByPersonCreatedID:', err);
       throw new Error('Failed to fetch companies by person');

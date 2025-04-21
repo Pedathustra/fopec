@@ -6,7 +6,7 @@ export async function fetchCompaniesByPersonId(
 ): Promise<Company[]> {
   const query = `
     query($personId: Int!) {
-      getCompaniesByPersonCreatedID(personId: $personId) {
+      getCompaniesByPersonId(personId: $personId) {
         id
         name
         created
@@ -16,9 +16,8 @@ export async function fetchCompaniesByPersonId(
     }
   `;
 
-  const data = await gqlRequest<{ getCompaniesByPersonCreatedID: Company[] }>(
-    query,
-    { personId }
-  );
-  return data.getCompaniesByPersonCreatedID;
+  const data = await gqlRequest<{ getCompaniesByPersonId: Company[] }>(query, {
+    personId,
+  });
+  return data.getCompaniesByPersonId;
 }

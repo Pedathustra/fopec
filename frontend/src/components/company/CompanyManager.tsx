@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { Company } from '../../types/types';
 import { TableHeader } from '../common/TableHeader';
 import { TableCell } from '../common/TableCell';
@@ -6,12 +6,12 @@ import { AddButtonRow } from '../common/AddButtonRow';
 import { DeleteButton } from '../common/DeleteButton';
 import { EditButton } from '../common/EditButton';
 import { CompanyEditRow } from './CompanyEditRow';
-import { fetchCompanies } from '../../graphql/fetchCompanies';
 import { createCompany } from '../../graphql/createCompany';
 import { updateCompany } from '../../graphql/updateCompany';
 import { deleteCompany } from '../../graphql/deleteCompany';
 import { usePersonId } from '../../hooks/usePersonId';
 import { formatDate } from '../../utils/formatDate';
+import { fetchCompaniesByPersonId } from '../../graphql/fetchCompaniesByPersonId';
 
 const emptyCompany = {
   name: '',
@@ -31,15 +31,16 @@ export function CompanyManager() {
       Omit<Company, 'id' | 'created' | 'lastUpdated' | 'personIdCreated'>
     >(emptyCompany);
 
-  const refetch = async () => {
-    const data = await fetchCompanies();
-    setCompanies(data);
-  };
   const personId = usePersonId();
+  const refetch = useCallback(async () => {
+    const data = personId && (await fetchCompaniesByPersonId(personId));
+    if (data) setCompanies(data);
+    console.log('personId', personId, 'with data', data);
+  }, [personId]);
 
   useEffect(() => {
     refetch().finally(() => setLoading(false));
-  }, []);
+  }, [refetch]);
 
   const handleDelete = async (id: number) => {
     const success = await deleteCompany({ id });
@@ -87,7 +88,6 @@ export function CompanyManager() {
       alert('Failed to update company');
     }
   };
-
   const displayData = companies.map((item, idx) =>
     editItem?.id === item.id ? (
       <CompanyEditRow
