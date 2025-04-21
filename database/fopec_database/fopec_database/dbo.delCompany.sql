@@ -9,8 +9,7 @@ end
 go
 
 create proc delCompany 
-	@id int,
-	@person_id int
+	@id int
 as
 begin
 	set nocount on;

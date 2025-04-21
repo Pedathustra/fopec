@@ -2,13 +2,13 @@ use fopec
 go
 
  
-if exists(select * from sys.procedures where name = 'getCompanies')
+if exists(select * from sys.procedures where name = 'getCompaniesByPersonID')
 begin 
-	drop proc getCompanies;
+	drop proc getCompaniesByPersonID;
 end 
 go
 
-create proc getCompaniesByPersonCreatedID
+create proc getCompaniesByPersonID
 	@person_id_created int
 as
 begin
