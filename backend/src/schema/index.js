@@ -76,6 +76,7 @@ type UpdatePersonResult {
 type Query {
     getAddresses: [Address!]!
     getAddressesByCompanyId(companyId: Int!): [Address!]!
+    getBusinessFocuses: [BusinessFocus!]!
     getBusinessFocusesByCompanyId(companyId: Int!): [BusinessFocus!]!
     getCrowdsourcedResearch: [ResearchItem]
     getCompanies: [Company]

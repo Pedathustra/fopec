@@ -440,6 +440,17 @@ const resolvers = {
       throw new Error('Delete failed');
     }
   },
+  getBusinessFocuses: async ({ companyId }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const result = await pool.request().execute('getBusinessFocuses');
+
+      return result.recordset;
+    } catch (err) {
+      console.error('Error fetching business focuses:', err);
+      throw new Error('Failed to fetch business focuses');
+    }
+  },
   getBusinessFocusesByCompanyId: async ({ companyId }) => {
     try {
       let pool = await sql.connect(dbConfig);

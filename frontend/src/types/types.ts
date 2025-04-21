@@ -16,6 +16,7 @@ export type Address = {
   city: string;
   state: string;
   zip: string;
+  isHQ?: boolean;
 };
 
 export type AppView =
