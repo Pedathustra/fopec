@@ -1,10 +1,10 @@
-if exists(select * from sys.procedures where name = 'delCompanyLocation')
+if exists(select * from sys.procedures where name = 'updCompanyLocation')
 begin
-	drop proc delCompanyLocation;
+	drop proc updCompanyLocation;
 end
 go
 
-create proc delCompanyLocation
+create proc updCompanyLocation
 	@company_id int,
 	@address_id int,
 	@isHQ bit
