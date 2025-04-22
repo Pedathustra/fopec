@@ -15,7 +15,6 @@ begin
 	select	bf.id,
 			bf.[description]
 	from business_focus bf
-		join company_business_focus cbf on bf.id = cbf.business_focus_id
 	;
  
 	
