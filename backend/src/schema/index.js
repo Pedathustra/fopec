@@ -136,6 +136,7 @@ type Query {
   deleteAddress(id: Int!): Int!
   insertCompany(name: String!, personIdCreated: Int!): Int!
   updateCompany(id: Int!, name: String!): Int!
+  updateCompanyLocation(companyId: Int!, addressId: Int!, isHQ: Boolean!): Int!
   deleteCompany(id: Int!): Int!
 
   addCompanyAddress(companyId: Int!, addressId: Int!, isHQ: Boolean!): Int!

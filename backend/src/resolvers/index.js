@@ -483,15 +483,33 @@ const resolvers = {
   deleteCompanyBusinessFocus: async ({ companyId, businessFocusId }) => {
     try {
       let pool = await sql.connect(dbConfig);
-      const result = await pool.request().query(`
-          delete from company_business_focus 
-          where company_id = ${companyId} and business_focus_id = ${businessFocusId}
-        `);
+      const result = await pool
+        .request()
+        .input('company_id', sql.Int, companyId)
+        .input('business_focus_id', sql.Int, businessFocusId)
+        .execute('delCompanyBusinessFocus');
 
-      return 0;
+      return result.returnValue;
     } catch (err) {
       console.error('Error deleting business focus from company:', err);
       throw new Error('Delete failed');
+    }
+  },
+  updateCompanyLocation: async ({ companyId, addressId, isHQ }) => {
+    try {
+      console.log('in the resolver');
+      let pool = await sql.connect(dbConfig);
+      const result = await pool
+        .request()
+        .input('company_id', sql.Int, companyId)
+        .input('address_id', sql.Int, addressId)
+        .input('isHQ', sql.Bit, isHQ)
+        .execute('updCompanyLocation');
+
+      return result.returnValue;
+    } catch (err) {
+      console.error('Error updating isHQ flag for company address:', err);
+      throw new Error('Update failed');
     }
   },
 };
