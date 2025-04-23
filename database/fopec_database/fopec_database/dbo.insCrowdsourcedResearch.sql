@@ -16,8 +16,6 @@ create proc insCrowdsourcedResearch
 as
 begin
 	set nocount on;
-	-- hardcode this for now until there's a login
-	if @observing_person_id is null set @observing_person_id = (select top 1 id from person);
 
 	insert into crowdsourced_research(
 			company_id
