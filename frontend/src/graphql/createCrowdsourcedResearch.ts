@@ -1,12 +1,11 @@
-import { gqlRequest } from './graphqlClient'
+import { gqlRequest } from './graphqlClient';
 
 export async function createCrowdsourcedResearch(input: {
-  companyId: number
-  ownershipTypeId: number
-  observingPersonId: number
-  notes: string
-  parentCompanyId: number | null
-
+  companyId: number;
+  ownershipTypeId: number;
+  observingPersonId: number;
+  notes: string;
+  parentCompanyId: number | null;
 }): Promise<boolean> {
   const mutation = `
     mutation(
@@ -14,7 +13,7 @@ export async function createCrowdsourcedResearch(input: {
       $ownershipTypeId: Int!,
       $observingPersonId: Int!,
       $notes: String!
-      parentCompanyId: Int,
+      $parentCompanyId: Int,
     ) {
       createCrowdsourcedResearch(
         companyId: $companyId,
@@ -24,8 +23,11 @@ export async function createCrowdsourcedResearch(input: {
         parentCompanyId: $parentCompanyId,
       )
     }
-  `
+  `;
 
-  const data = await gqlRequest<{ createCrowdsourcedResearch: boolean }>(mutation, input)
-  return data.createCrowdsourcedResearch
+  const data = await gqlRequest<{ createCrowdsourcedResearch: boolean }>(
+    mutation,
+    input
+  );
+  return data.createCrowdsourcedResearch;
 }

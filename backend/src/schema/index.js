@@ -79,6 +79,7 @@ type Query {
     getBusinessFocuses: [BusinessFocus!]!
     getBusinessFocusesByCompanyId(companyId: Int!): [BusinessFocus!]!
     getCrowdsourcedResearch: [ResearchItem]
+    getCrowdsourcedResearchByPersonId(personId: Int!): [ResearchItem]
     getCompanies: [Company]
     getCompaniesByPersonId(personId: Int!): [Company!]!
     getOwnershipTypes: [OwnershipTypes]

@@ -8,16 +8,18 @@ const resolvers = {
     ownershipTypeId,
     observingPersonId,
     notes,
+    parentCompanyId,
   }) => {
+    console.log('parentCompanyId', parentCompanyId);
     try {
       let pool = await sql.connect(dbConfig);
       await pool
         .request()
-        .input('companyId', sql.Int, companyId)
+        .input('company_id', sql.Int, companyId)
         .input('ownership_type_id', sql.Int, ownershipTypeId)
-        //.input('observing_person_id', sql.Int, observingPersonId)
+        .input('observing_person_id', sql.Int, observingPersonId)
         .input('notes', sql.VarChar(sql.MAX), notes)
-        .input('parentCompanyId', sql.Int, parentCompanyId)
+        .input('parent_company_id', sql.Int, parentCompanyId)
         .execute('insCrowdsourcedResearch');
 
       return true;
@@ -30,6 +32,31 @@ const resolvers = {
     try {
       let pool = await sql.connect(dbConfig);
       let result = await pool.request().execute('getCrowdsourcedResearch');
+
+      return result.recordset.map((row) => ({
+        crowdsourcedId: row.crowdsourced_id,
+        companyId: row.company_id,
+        companyName: row.company_name,
+        parentCompanyId: row.parent_company_id,
+        parentCompanyName: row.parent_company_name,
+        ownershipTypeId: row.ownership_type_id,
+        ownershipTypeDescription: row.ownership_type_description,
+        username: row.username,
+        created: row.created,
+        notes: row.notes,
+      }));
+    } catch (error) {
+      console.error('Error executing stored procedure:', error);
+      throw new Error('Failed to fetch research data');
+    }
+  },
+  getCrowdsourcedResearchByPersonId: async ({ personId }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      let result = await pool
+        .request()
+        .input('person_id', sql.Int, personId)
+        .execute('getCrowdsourcedResearchByPersonId');
 
       return result.recordset.map((row) => ({
         crowdsourcedId: row.crowdsourced_id,

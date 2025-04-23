@@ -7,12 +7,13 @@ import { EditButton } from '../common/EditButton';
 import ResearchEditRow from './EditResearchRow';
 import { formatDate } from '../../utils/formatDate';
 import type { Company, OwnershipType, ResearchItem } from '../../types/types';
-import { fetchCrowdsourcedResearch } from '../../graphql/fetchCrowdsourceResearch';
+import { fetchCrowdsourcedResearchByPersonId } from '../../graphql/fetchCrowdsourcedResearchByPersonId';
 import { deleteCrowdsourcedResearch } from '../../graphql/deleteCrowdsourceResearch';
 import { createCrowdsourcedResearch } from '../../graphql/createCrowdsourcedResearch';
 import { fetchCompanies } from '../../graphql/fetchCompanies';
 import { fetchOwnershipTypes } from '../../graphql/fetchOwnershipTypes';
 import { updateCrowdsourcedResearch } from '../../graphql/updateCrowdsourcedResearch';
+import { usePersonId } from '../../hooks/usePersonId';
 
 export function CrowdsourcedResearch() {
   const [items, setItems] = useState<ResearchItem[]>([]);
@@ -33,20 +34,25 @@ export function CrowdsourcedResearch() {
     notes: '',
     parentCompanyId: '',
   });
+  const personId = usePersonId();
 
   const [companies, setCompanies] = useState<Company[]>([]);
   const [ownershipTypes, setOwnershipTypes] = useState<OwnershipType[]>([]);
 
   const refetch = async () => {
-    const data = await fetchCrowdsourcedResearch();
-    setItems(data);
+    if (personId) {
+      const data = await fetchCrowdsourcedResearchByPersonId(personId);
+      setItems(data);
+    }
   };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchCrowdsourcedResearch();
-        setItems(data);
+        if (personId) {
+          const data = await fetchCrowdsourcedResearchByPersonId(personId);
+          setItems(data);
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -89,13 +95,15 @@ export function CrowdsourcedResearch() {
       return;
     }
 
-    const success = await createCrowdsourcedResearch({
-      companyId: Number(companyId),
-      ownershipTypeId: Number(ownershipTypeId),
-      observingPersonId: 1,
-      notes,
-      parentCompanyId: parentCompanyId ? Number(parentCompanyId) : null,
-    });
+    const success =
+      personId &&
+      (await createCrowdsourcedResearch({
+        companyId: Number(companyId),
+        ownershipTypeId: Number(ownershipTypeId),
+        observingPersonId: personId,
+        notes,
+        parentCompanyId: parentCompanyId ? Number(parentCompanyId) : null,
+      }));
 
     if (success) {
       setNewEntry({
