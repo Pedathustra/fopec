@@ -8,7 +8,7 @@ end
 go
 
 create proc insCrowdsourcedResearch 
-		@companyId int
+		@company_id int
 	,	@ownership_type_id int
 	,	@observing_person_id int = null 
 	,	@notes varchar(max)
@@ -26,7 +26,7 @@ begin
 		,	parent_company_id
 	)
 	values(
-			@companyId
+			@company_id
 		,	@ownership_type_id
 		,	@observing_person_id
 		,	getdate()

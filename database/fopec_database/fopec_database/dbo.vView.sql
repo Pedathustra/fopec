@@ -19,6 +19,7 @@ as
 				parent.id parent_id,
 				parent.name parent_name,
 				cr.notes
+				
 
 	from		person voter
 		join	crowdsourced_research_vote  crv on voter.id = crv.person_id
