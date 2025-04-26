@@ -1,10 +1,10 @@
-if exists( select name from sys.procedures where name = 'insVote')
+if exists( select name from sys.procedures where name = 'updVote')
 begin
-	drop proc insVote
+	drop proc updVote
 end
 go
 
-create proc insVote
+create proc updVote
 	@crowdsourced_research_id int,
 	@person_id int,
 	@vote_type varchar(100)
