@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { CrowdsourcedResearch } from './components/crowdsourcedResearch/CrowdsourcedResearch';
 import { Menu } from './components/layout/Menu';
 import { AppView } from './types/types';
-import { Vote } from './components/vote/Vote';
+import { VoteManager } from './components/vote/VoteManager';
 import { CompanyManager } from './components/company/CompanyManager';
 import { AddressManager } from './components/address/AddressManager';
 import { PersonActivity } from './components/personActivity/PersonActivity';
@@ -81,7 +81,7 @@ function App() {
           {view === 'address' && <AddressManager />}
           {view === 'company' && <CompanyManager />}
           {view === 'crowdsourcedResearch' && <CrowdsourcedResearch />}
-          {view === 'vote' && <Vote />}
+          {view === 'vote' && <VoteManager />}
           {view === 'editProfile' && <PersonForm mode="update" />}
           {view === 'personActivity' && <PersonActivity />}
         </main>

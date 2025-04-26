@@ -61,7 +61,7 @@ export type DeleteButtonProps = {
 
 export type EditButtonProps = {
   label: string;
-  onClick: () => void; //React.Dispatch<React.SetStateAction<ResearchItem | null>>
+  onClick: () => void;
 };
 export type Person = {
   id: number;

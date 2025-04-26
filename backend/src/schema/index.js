@@ -73,6 +73,18 @@ type UpdatePersonResult {
   success: Boolean!
   error: String
 }
+type VoteSummary {
+  companyName: String!
+  ownershipTypeDescription: String!
+  parentCompanyName: String
+  id: Int!
+  notes: String
+  observer: String!
+  observerId: Int!
+  upCount: Int!
+  downCount: Int!
+}
+
 type Query {
     getAddresses: [Address!]!
     getAddressesByCompanyId(companyId: Int!): [Address!]!
@@ -84,6 +96,7 @@ type Query {
     getCompaniesByPersonId(personId: Int!): [Company!]!
     getOwnershipTypes: [OwnershipTypes]
     getPerson(id: Int!): Person
+    getVotes(observerPersonId: Int!): [VoteSummary!]!    
   }
 
   type Mutation {
@@ -145,6 +158,10 @@ type Query {
 
   addCompanyBusinessFocus(companyId: Int!, businessFocusId: Int!): Int!
   deleteCompanyBusinessFocus(companyId: Int!, businessFocusId: Int!): Int!
+  
+  castVote(crowdsourcedResearchId: Int!, personId: Int!, voteType: String!): Int!
+  changeVote(crowdsourcedResearchId: Int!, personId: Int!, voteType: String!): Int!
+  withdrawVote(crowdsourcedResearchId: Int!, personId: Int!): Int!
   }
     
 `);

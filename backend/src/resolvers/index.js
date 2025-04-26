@@ -524,7 +524,6 @@ const resolvers = {
   },
   updateCompanyLocation: async ({ companyId, addressId, isHQ }) => {
     try {
-      console.log('in the resolver');
       let pool = await sql.connect(dbConfig);
       const result = await pool
         .request()
@@ -537,6 +536,79 @@ const resolvers = {
     } catch (err) {
       console.error('Error updating isHQ flag for company address:', err);
       throw new Error('Update failed');
+    }
+  },
+  getVotes: async ({ observerPersonId }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const result = await pool
+        .request()
+        .input('observer_person_id', sql.Int, observerPersonId)
+        .execute('getVotes');
+
+      return result.recordset.map((row) => ({
+        companyName: row.company_name,
+        ownershipTypeDescription: row.ownership_type_description,
+        parentCompanyName: row.parent_company_name,
+        id: row.id,
+        notes: row.notes,
+        observer: row.observer,
+        observerId: row.observer_id,
+        upCount: row.up_count,
+        downCount: row.down_count,
+      }));
+    } catch (err) {
+      console.error('Error fetching votes:', err);
+      throw new Error('Failed to fetch votes');
+    }
+  },
+  castVote: async ({ crowdsourcedResearchId, personId, voteType }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const result = await pool
+        .request()
+        .input('crowdsourced_research_id', sql.Int, crowdsourcedResearchId)
+        .input('person_id', sql.Int, personId)
+        .input('vote_type', sql.VarChar(100), voteType)
+        .execute('insVote');
+
+      return result.returnValue;
+    } catch (err) {
+      console.error('Error casting vote:', err);
+      throw new Error('Vote failed');
+    }
+  },
+
+  changeVote: async ({ crowdsourcedResearchId, personId, voteType }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const result = await pool
+        .request()
+        .input('crowdsourced_research_id', sql.Int, crowdsourcedResearchId)
+        .input('person_id', sql.Int, personId)
+        .input('vote_type', sql.VarChar(100), voteType)
+        .execute('updVote');
+
+      return result.returnValue;
+    } catch (err) {
+      console.error('Error changing vote:', err);
+      throw new Error('Change vote failed');
+    }
+  },
+
+  withdrawVote: async ({ crowdsourcedResearchId, personId }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const result = await pool
+        .request()
+        .input('crowdsourced_research_id', sql.Int, crowdsourcedResearchId)
+        .input('person_id', sql.Int, personId)
+        .execute('delVote');
+
+      return result.returnValue;
+    } catch (err) {
+      console.error('Error withdrawing vote:', err);
+      throw new Error('Withdraw vote failed');
     }
   },
 };
