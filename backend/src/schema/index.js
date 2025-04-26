@@ -69,6 +69,13 @@ type Person {
   username: String!
   isActive: Boolean!
 } 
+
+type PersonBasic {
+  id: Int!
+  username: String!
+  firstName: String!
+  lastName: String!
+}
 type UpdatePersonResult {
   success: Boolean!
   error: String
@@ -84,6 +91,17 @@ type VoteSummary {
   upCount: Int!
   downCount: Int!
 }
+type PersonAuditRecord {
+  firstName: String!
+  lastName: String!
+  middleName: String
+  username: String!
+  createdDate: String
+  updatedDate: String
+  isActive: Boolean!
+  recordType: String!
+  idx: Int!
+}
 
 type Query {
     getAddresses: [Address!]!
@@ -97,6 +115,8 @@ type Query {
     getOwnershipTypes: [OwnershipTypes]
     getPerson(id: Int!): Person
     getVotes(observerPersonId: Int!): [VoteSummary!]!    
+    getPersons: [PersonBasic!]!
+    getPersonAuditById(personId: Int!): [PersonAuditRecord!]!
   }
 
   type Mutation {

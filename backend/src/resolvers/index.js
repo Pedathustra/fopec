@@ -611,6 +611,57 @@ const resolvers = {
       throw new Error('Withdraw vote failed');
     }
   },
+  getPersons: async () => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const result = await pool.request().execute('getPersons');
+
+      return result.recordset.map((row) => ({
+        id: row.id,
+        username: row.username,
+        firstName: row.first_name,
+        lastName: row.last_name,
+      }));
+    } catch (err) {
+      console.error('Error fetching persons:', err);
+      throw new Error('Failed to fetch persons');
+    }
+  },
+  getPersonAuditById: async ({ personId }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const result = await pool.request().input('id', sql.Int, personId).query(`
+          select 
+            first_name,
+            last_name,
+            middle_name,
+            username,
+            created_date,
+            updated_date,
+            is_active,
+            record_type,
+            idx
+          from vPersonAudit
+          where id = @id
+          order by idx
+        `);
+
+      return result.recordset.map((row) => ({
+        firstName: row.first_name,
+        lastName: row.last_name,
+        middleName: row.middle_name,
+        username: row.username,
+        createdDate: row.created_date,
+        updatedDate: row.updated_date,
+        isActive: row.is_active,
+        recordType: row.record_type,
+        idx: row.idx,
+      }));
+    } catch (err) {
+      console.error('Error fetching person audit:', err);
+      throw new Error('Failed to fetch audit data');
+    }
+  },
 };
 
 module.exports = resolvers;
