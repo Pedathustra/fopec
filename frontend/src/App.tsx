@@ -8,6 +8,8 @@ import { AddressManager } from './components/address/AddressManager';
 import { PersonActivity } from './components/personActivity/PersonActivity';
 import { Login } from './components/auth/Login';
 import { PersonForm } from './components/auth/PersonForm';
+import { BusinessFocusManager } from './components/businessFocus/BusinessFocusManager';
+import { OwnershipTypeManager } from './components/ownershipType/OwnershipTypeManager';
 
 type Page = 'login' | 'register' | 'main';
 
@@ -84,6 +86,8 @@ function App() {
           {view === 'vote' && <VoteManager />}
           {view === 'editProfile' && <PersonForm mode="update" />}
           {view === 'personActivity' && <PersonActivity />}
+          {view === 'businessFocus' && <BusinessFocusManager />}
+          {view === 'ownershipType' && <OwnershipTypeManager />}
         </main>
       </div>
     );

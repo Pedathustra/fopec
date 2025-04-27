@@ -1,13 +1,10 @@
-import { AppView } from "../../types/types"
-import { LogoutButton } from "../auth/LogoutButton"
-
- 
- 
+import { AppView } from '../../types/types';
+import { LogoutButton } from '../auth/LogoutButton';
 
 interface MenuProps {
-  onSelect: (view: AppView) => void
-  onLogout: () => void
-  currentView: AppView
+  onSelect: (view: AppView) => void;
+  onLogout: () => void;
+  currentView: AppView;
 }
 
 const menuItems: { label: string; view: AppView }[] = [
@@ -16,8 +13,10 @@ const menuItems: { label: string; view: AppView }[] = [
   { label: 'Crowdsourced Research', view: 'crowdsourcedResearch' },
   { label: 'Vote', view: 'vote' },
   { label: 'Edit Profile', view: 'editProfile' },
-  { label: 'Account Activity', view: 'personActivity' },
-]
+  { label: 'Account Audit', view: 'personActivity' },
+  { label: 'Business Focus', view: 'businessFocus' },
+  { label: 'Ownership Type', view: 'ownershipType' },
+];
 
 export function Menu({ onSelect, onLogout, currentView }: MenuProps) {
   return (
@@ -54,5 +53,5 @@ export function Menu({ onSelect, onLogout, currentView }: MenuProps) {
         <LogoutButton onLogout={onLogout} />
       </div>
     </nav>
-  )
+  );
 }

@@ -1,3 +1,3 @@
-export function OwnershipTypeManager() {
-  return <div>Business File</div>;
+export function BusinessFocusManager() {
+  return <div>Business Focus</div>;
 }

@@ -25,7 +25,9 @@ export type AppView =
   | 'crowdsourcedResearch'
   | 'editProfile'
   | 'address'
-  | 'personActivity';
+  | 'personActivity'
+  | 'businessFocus'
+  | 'ownershipType';
 
 export type BusinessFocus = {
   id: number;
