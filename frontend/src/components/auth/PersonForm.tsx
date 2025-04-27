@@ -20,6 +20,7 @@ export const emptyPerson = {
   firstName: '',
   middleName: '',
   lastName: '',
+  isActive: true,
 };
 
 export function PersonForm({ mode, initialData, onSuccess }: PersonFormProps) {
@@ -27,7 +28,7 @@ export function PersonForm({ mode, initialData, onSuccess }: PersonFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const handleChange = (field: string, value: string) => {
+  const handleChange = (field: string, value: string | boolean) => {
     setAuth((prev) => ({ ...prev, [field]: value }));
   };
   useEffect(() => {
@@ -48,6 +49,7 @@ export function PersonForm({ mode, initialData, onSuccess }: PersonFormProps) {
                 lastName: data.lastName,
                 middleName: data.middleName || '',
                 username: data.username,
+                isActive: data.isActive || true,
               };
             });
             setLoading(false);
@@ -86,7 +88,7 @@ export function PersonForm({ mode, initialData, onSuccess }: PersonFormProps) {
           window.dispatchEvent(new CustomEvent('notifyLoginSuccess'));
           setTimeout(() => {
             setSuccessMessage(null);
-            if(onSuccess !== undefined)  onSuccess('registered');
+            if (onSuccess !== undefined) onSuccess('registered');
           }, 2000);
         }
       } else {
@@ -97,6 +99,7 @@ export function PersonForm({ mode, initialData, onSuccess }: PersonFormProps) {
           middleName: auth.middleName,
           username: auth.username,
           password: auth.password,
+          isActive: auth.isActive,
         });
 
         if (!result.success) {
@@ -121,6 +124,9 @@ export function PersonForm({ mode, initialData, onSuccess }: PersonFormProps) {
     color: 'white',
     cursor: 'pointer',
   };
+  if (mode === 'update') {
+    console.log('auth', auth);
+  }
 
   return (
     <div
@@ -177,11 +183,22 @@ export function PersonForm({ mode, initialData, onSuccess }: PersonFormProps) {
             value={auth.confirmPassword}
             onChange={(val) => handleChange('confirmPassword', val)}
           />
+          {mode === 'update' && (
+            <label
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            >
+              <input
+                type="checkbox"
+                checked={auth.isActive}
+                onChange={(e) => handleChange('isActive', e.target.checked)}
+              />
+              Active
+            </label>
+          )}
 
           <button type="submit" style={buttonStyle}>
             {mode === 'register' ? 'Register' : 'Update'}
           </button>
-
           {mode === 'register' && (
             <button
               type="button"

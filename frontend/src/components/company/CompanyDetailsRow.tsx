@@ -101,6 +101,7 @@ export function CompanyDetailsRow({ companyId, onUpdate }: Props) {
                 <tr key={`edit-address-${a.id}`}>
                   <td>
                     <input
+                      disabled
                       type="text"
                       value={editableAddress.line1}
                       onChange={(e) =>
@@ -114,6 +115,7 @@ export function CompanyDetailsRow({ companyId, onUpdate }: Props) {
                     <br />
                     <input
                       type="text"
+                      disabled
                       value={editableAddress.city}
                       onChange={(e) =>
                         setEditableAddress({
@@ -126,6 +128,7 @@ export function CompanyDetailsRow({ companyId, onUpdate }: Props) {
                     <br />
                     <input
                       type="text"
+                      disabled
                       value={editableAddress.state}
                       onChange={(e) =>
                         setEditableAddress({
@@ -138,6 +141,7 @@ export function CompanyDetailsRow({ companyId, onUpdate }: Props) {
                     <br />
                     <input
                       type="text"
+                      disabled
                       value={editableAddress.zip}
                       onChange={(e) =>
                         setEditableAddress({
