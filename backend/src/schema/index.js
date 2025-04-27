@@ -186,6 +186,10 @@ type Query {
   insertBusinessFocus(description: String!): Int!
   updateBusinessFocus(id: Int!, description: String!): Int!
   deleteBusinessFocus(id: Int!): Int!
+
+  insertOwnershipType(description: String!): Int!
+  updateOwnershipType(id: Int!, description: String!): Int!
+  deleteOwnershipType(id: Int!): Int!
   }
     
 `);

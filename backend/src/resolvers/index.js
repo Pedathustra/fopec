@@ -705,6 +705,48 @@ const resolvers = {
       throw new Error('Delete failed');
     }
   },
+  insertOwnershipType: async ({ description }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const result = await pool
+        .request()
+        .input('description', sql.VarChar(255), description)
+        .execute('insOwnershipType');
+      return result.returnValue;
+    } catch (err) {
+      console.error('Error inserting ownership type:', err);
+      throw new Error('Insert failed');
+    }
+  },
+
+  updateOwnershipType: async ({ id, description }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const result = await pool
+        .request()
+        .input('id', sql.Int, id)
+        .input('description', sql.VarChar(255), description)
+        .execute('updOwnershipType');
+      return result.returnValue;
+    } catch (err) {
+      console.error('Error updating ownership type:', err);
+      throw new Error('Update failed');
+    }
+  },
+
+  deleteOwnershipType: async ({ id }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const result = await pool
+        .request()
+        .input('id', sql.Int, id)
+        .execute('delOwnershipType');
+      return result.returnValue;
+    } catch (err) {
+      console.error('Error deleting ownership type:', err);
+      throw new Error('Delete failed');
+    }
+  },
 };
 
 module.exports = resolvers;
