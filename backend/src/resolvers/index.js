@@ -662,6 +662,49 @@ const resolvers = {
       throw new Error('Failed to fetch audit data');
     }
   },
+  insertBusinessFocus: async ({ description }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const result = await pool
+        .request()
+        .input('description', sql.VarChar(255), description)
+        .execute('insBusinessFocus');
+
+      return result.returnValue;
+    } catch (err) {
+      console.error('Error inserting business focus:', err);
+      throw new Error('Insert failed');
+    }
+  },
+  updateBusinessFocus: async ({ id, description }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const result = await pool
+        .request()
+        .input('id', sql.Int, id)
+        .input('description', sql.VarChar(255), description)
+        .execute('updBusinessFocus');
+
+      return result.returnValue;
+    } catch (err) {
+      console.error('Error updating business focus:', err);
+      throw new Error('Update failed');
+    }
+  },
+  deleteBusinessFocus: async ({ id }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const result = await pool
+        .request()
+        .input('id', sql.Int, id)
+        .execute('delBusinessFocus');
+
+      return result.returnValue;
+    } catch (err) {
+      console.error('Error deleting business focus:', err);
+      throw new Error('Delete failed');
+    }
+  },
 };
 
 module.exports = resolvers;

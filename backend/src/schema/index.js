@@ -182,6 +182,10 @@ type Query {
   castVote(crowdsourcedResearchId: Int!, personId: Int!, voteType: String!): Int!
   changeVote(crowdsourcedResearchId: Int!, personId: Int!, voteType: String!): Int!
   withdrawVote(crowdsourcedResearchId: Int!, personId: Int!): Int!
+
+  insertBusinessFocus(description: String!): Int!
+  updateBusinessFocus(id: Int!, description: String!): Int!
+  deleteBusinessFocus(id: Int!): Int!
   }
     
 `);
