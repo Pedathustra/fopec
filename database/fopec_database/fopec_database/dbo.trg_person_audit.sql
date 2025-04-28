@@ -1,10 +1,10 @@
-if exists(select * from sys.triggers where name = 'trg_person_before_update')
+if exists(select * from sys.triggers where name = 'trg_person_audit')
 begin
-	drop trigger trg_person_before_update;
+	drop trigger trg_person_audit;
 end
 go
 
-create trigger trg_person_before_update
+create trigger trg_person_audit
 on person
 after update
 as

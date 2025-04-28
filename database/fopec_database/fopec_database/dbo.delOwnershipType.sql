@@ -1,14 +1,13 @@
 use fopec
 go
 
-if exists(select * from sys.procedures where name = 'updOwnershipType')
+if exists(select * from sys.procedures where name = 'delOwnershipType')
 begin 
-	drop proc updOwnershipType;
+	drop proc delOwnershipType;
 end 
 go
 
-create proc updOwnershipType 
-	@description varchar(255), 
+create proc delOwnershipType 
 	@id int
 as
 begin

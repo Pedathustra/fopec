@@ -23,6 +23,11 @@ values ('Vet Clinic'), ('Orthopedic Clinic'), ('Doggie Daycare');
 ------------------------
 -- person
 ------------------------
+set identity_insert person on
+insert into person (id, first_name, middle_name, last_name, username, password, created)
+values (0, 'DELETED', 'DELETED', 'DELETED', 'DELETED', 0x01, getdate());
+set identity_insert person off
+
 insert into person (first_name, middle_name, last_name, username, password, created)
 values ('Robert', '', 'DeNiro', 'taximan', 0x01, getdate());
 
