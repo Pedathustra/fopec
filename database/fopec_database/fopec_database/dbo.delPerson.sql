@@ -15,4 +15,6 @@ as
 go
 
 --select * from person
---exec delPerson 152
+--exec delPerson 154
+--select * from person_audit
+--xec getPersonActivity 3
