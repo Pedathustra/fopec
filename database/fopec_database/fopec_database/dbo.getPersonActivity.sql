@@ -13,15 +13,16 @@ as
 	-- and with using count distincts caused issues in performance.
 	-- this approach isolates these operations.
 	select t.id,
+		dta.is_active,
 		t.display_name,
 		dta.audit_records,
 		dta.company_records,
 		dta.crowdsourced_research_records,
 		dta.vote_records
-
 	from  dbo.fnFormatPerson(@name_display_type) t
 	join 	(
 		select p.id,
+				p.is_active,
 			   count(distinct pa.id) audit_records,
 			   count(distinct c.id) company_records,
 			   count( distinct cr.id) crowdsourced_research_records,
@@ -31,7 +32,7 @@ as
 			left join company c on p.id = c.person_id_created
 			left join crowdsourced_research cr on p.id = cr.observing_person_id
 			left join crowdsourced_research_vote v on p.id = v.person_id
-		group by p.id
+		group by p.id, p.is_active
 	) dta on t.id = dta.id
 go
 
