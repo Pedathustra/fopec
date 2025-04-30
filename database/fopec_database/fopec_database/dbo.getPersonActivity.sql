@@ -38,6 +38,6 @@ go
 
 
 
-exec getPersonActivity 3
+--exec getPersonActivity 3
   
  
