@@ -11,12 +11,11 @@ as
 begin
     set nocount on;
 
-	if (select count(id) from deleted) = 1
+	 if (select count(id) from deleted) > 1
 	begin 
-		delete from person
-		where id in (select id from deleted);
+		print('Not allowing delete of > 1 person at this time')
+
 	end else begin
-    
 		declare @id int = (select id from deleted);
 
 		update company
@@ -33,7 +32,7 @@ begin
 
 		
 		exec updPersonAudit @id = @id 
-
+		
 		delete from person
 		where id in (select id from deleted);
 	end

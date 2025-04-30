@@ -1,10 +1,10 @@
-if exists( select name from sys.procedures where name = 'delVoteType')
+if exists( select name from sys.procedures where name = 'insVoteType')
 begin
-	drop proc delVoteType
+	drop proc insVoteType
 end
 go
 
-create proc delVoteType
+create proc insVoteType
 		@vote_type varchar(100)
 as 
 

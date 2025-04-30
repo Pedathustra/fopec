@@ -16,8 +16,11 @@ as
 			middle_name = middle_name + ' DELETED',
 			last_name = last_name + ' DELETED',
 			username = username + ' DELETED',
-			is_active = 0
+			is_active = 0,
+			person_id = 0
 
-	where	person_id = @id
+	where	person_id = @id;
+
+	
 
 go
