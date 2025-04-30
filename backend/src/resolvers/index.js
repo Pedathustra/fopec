@@ -799,6 +799,24 @@ const resolvers = {
       throw new Error('Update isActive failed');
     }
   },
+  getDatabaseObjectCounts: async () => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const result = await pool.request().execute('getDatabaseObjectCounts');
+      const row = result.recordset[0];
+
+      return {
+        tableCount: row.table_count,
+        viewCount: row.view_count,
+        procedureCount: row.procedure_count,
+        functionCount: row.function_count,
+        triggerCount: row.trigger_count,
+      };
+    } catch (err) {
+      console.error('Error fetching database object counts:', err);
+      throw new Error('Failed to fetch object counts');
+    }
+  },
 };
 
 module.exports = resolvers;

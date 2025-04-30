@@ -112,6 +112,13 @@ type PersonActivityRow {
   crowdsourcedResearchRecords: Int!
   voteRecords: Int!
 }
+type DatabaseObjectCounts {
+  tableCount: Int!
+  viewCount: Int!
+  procedureCount: Int!
+  functionCount: Int!
+  triggerCount: Int!
+}
 
 type Query {
     getAddresses: [Address!]!
@@ -128,6 +135,7 @@ type Query {
     getPersons: [PersonBasic!]!
     getPersonAuditById(personId: Int!): [PersonAuditRecord!]!
     getPersonActivity(nameDisplayType: Int!): [PersonActivityRow!]!
+    getDatabaseObjectCounts: DatabaseObjectCounts!
   }
 
   type Mutation {

@@ -137,3 +137,11 @@ export type PersonActivity = {
   crowdsourcedResearchRecords: number;
   voteRecords: number;
 };
+
+export type DatabaseObjectCounts = {
+  tableCount: number;
+  viewCount: number;
+  procedureCount: number;
+  functionCount: number;
+  triggerCount: number;
+};
