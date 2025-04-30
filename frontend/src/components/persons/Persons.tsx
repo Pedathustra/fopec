@@ -79,20 +79,28 @@ export function Persons() {
               <tr key={person.id}>
                 <TableCell>{person.displayName}</TableCell>
                 <TableCell>
-                  <input
-                    type="checkbox"
-                    checked={person.isActive}
-                    onChange={() =>
-                      handleToggleActive(person.id, person.isActive)
-                    }
-                  />
+                  {person.id !== 0 && (
+                    <input
+                      type="checkbox"
+                      checked={person.isActive}
+                      onChange={() =>
+                        handleToggleActive(person.id, person.isActive)
+                      }
+                    />
+                  )}
+                  {person.id === 0 && <>-</>}
                 </TableCell>
                 <TableCell>{person.auditRecords}</TableCell>
                 <TableCell>{person.companyRecords}</TableCell>
                 <TableCell>{person.crowdsourcedResearchRecords}</TableCell>
                 <TableCell>{person.voteRecords}</TableCell>
                 <TableCell>
-                  <DeleteButton onClick={() => setConfirmDeleteId(person.id)} />
+                  {person.id !== 0 && (
+                    <DeleteButton
+                      onClick={() => setConfirmDeleteId(person.id)}
+                    />
+                  )}
+                  {person.id === 0 && <>-</>}
                 </TableCell>
               </tr>
             ))}
