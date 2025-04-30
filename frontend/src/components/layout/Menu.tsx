@@ -16,6 +16,8 @@ const menuItems: { label: string; view: AppView }[] = [
   { label: 'Account Audit', view: 'personActivity' },
   { label: 'Business Focus', view: 'businessFocus' },
   { label: 'Ownership Type', view: 'ownershipType' },
+  { label: 'Persons', view: 'persons' },
+  { label: 'Database Objects', view: 'databaseObjects' },
 ];
 
 export function Menu({ onSelect, onLogout, currentView }: MenuProps) {

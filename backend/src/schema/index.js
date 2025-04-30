@@ -103,6 +103,16 @@ type PersonAuditRecord {
   idx: Int!
 }
 
+type PersonActivityRow {
+  id: Int!
+  displayName: String!
+  isActive: Boolean!
+  auditRecords: Int!
+  companyRecords: Int!
+  crowdsourcedResearchRecords: Int!
+  voteRecords: Int!
+}
+
 type Query {
     getAddresses: [Address!]!
     getAddressesByCompanyId(companyId: Int!): [Address!]!
@@ -117,6 +127,7 @@ type Query {
     getVotes(observerPersonId: Int!): [VoteSummary!]!    
     getPersons: [PersonBasic!]!
     getPersonAuditById(personId: Int!): [PersonAuditRecord!]!
+    getPersonActivity(nameDisplayType: Int!): [PersonActivityRow!]!
   }
 
   type Mutation {
@@ -190,6 +201,8 @@ type Query {
   insertOwnershipType(description: String!): Int!
   updateOwnershipType(id: Int!, description: String!): Int!
   deleteOwnershipType(id: Int!): Int!
+  updatePersonActive(id: Int!, isActive: Boolean!): Int!
+  deletePerson(personId: Int!): Int!
   }
     
 `);

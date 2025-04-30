@@ -747,6 +747,58 @@ const resolvers = {
       throw new Error('Delete failed');
     }
   },
+  getPersonActivity: async ({ nameDisplayType }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const result = await pool
+        .request()
+        .input('name_display_type', sql.TinyInt, nameDisplayType)
+        .execute('getPersonActivity');
+
+      return result.recordset.map((row) => ({
+        id: row.id,
+        displayName: row.display_name,
+        isActive: row.is_active,
+        auditRecords: row.audit_records,
+        companyRecords: row.company_records,
+        crowdsourcedResearchRecords: row.crowdsourced_research_records,
+        voteRecords: row.vote_records,
+      }));
+    } catch (err) {
+      console.error('Error fetching person activity:', err);
+      throw new Error('Failed to retrieve person activity');
+    }
+  },
+  deletePerson: async ({ personId }) => {
+    try {
+      let pool = await sql.connect(dbConfig);
+      const result = await pool
+        .request()
+        .input('person_id', sql.Int, personId)
+        .execute('delPerson');
+
+      return result.returnValue;
+    } catch (err) {
+      console.error('Error deleting person:', err);
+      throw new Error('Delete failed');
+    }
+  },
+  updatePersonActive: async ({ id, isActive }) => {
+    try {
+      console.log('id', id);
+      let pool = await sql.connect(dbConfig);
+      const result = await pool
+        .request()
+        .input('id', sql.Int, id)
+        .input('is_active', sql.Bit, isActive)
+        .execute('updPersonActive');
+      console.log('result', result);
+      return result.returnValue;
+    } catch (err) {
+      console.error('Error updating person activity status:', err);
+      throw new Error('Update isActive failed');
+    }
+  },
 };
 
 module.exports = resolvers;

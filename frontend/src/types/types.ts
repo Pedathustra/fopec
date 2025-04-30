@@ -27,7 +27,9 @@ export type AppView =
   | 'address'
   | 'personActivity'
   | 'businessFocus'
-  | 'ownershipType';
+  | 'ownershipType'
+  | 'persons'
+  | 'databaseObjects';
 
 export type BusinessFocus = {
   id: number;
@@ -124,4 +126,14 @@ export type TableCellProps = {
 export type TableHeaderProps = {
   label: string;
   nowrap?: boolean;
+};
+
+export type PersonActivity = {
+  id: number;
+  displayName: string;
+  isActive: boolean;
+  auditRecords: number;
+  companyRecords: number;
+  crowdsourcedResearchRecords: number;
+  voteRecords: number;
 };
