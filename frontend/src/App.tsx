@@ -10,6 +10,8 @@ import { Login } from './components/auth/Login';
 import { PersonForm } from './components/auth/PersonForm';
 import { BusinessFocusManager } from './components/businessFocus/BusinessFocusManager';
 import { OwnershipTypeManager } from './components/ownershipType/OwnershipTypeManager';
+import { Persons } from './components/persons/Persons';
+import { DatabaseObjects } from './components/databaseObjects/databaseObjects';
 
 type Page = 'login' | 'register' | 'main';
 
@@ -88,6 +90,8 @@ function App() {
           {view === 'personActivity' && <PersonActivity />}
           {view === 'businessFocus' && <BusinessFocusManager />}
           {view === 'ownershipType' && <OwnershipTypeManager />}
+          {view === 'persons' && <Persons />}
+          {view === 'databaseObjects' && <DatabaseObjects />}
         </main>
       </div>
     );
