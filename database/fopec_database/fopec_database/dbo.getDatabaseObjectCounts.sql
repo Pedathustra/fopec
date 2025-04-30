@@ -16,5 +16,5 @@ as
 go
 
 
-exec  getDatabaseObjectCounts
+--exec  getDatabaseObjectCounts
  
