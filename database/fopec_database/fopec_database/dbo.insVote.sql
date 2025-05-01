@@ -10,16 +10,7 @@ create proc insVote
 	@vote_type varchar(100)
 as 
 	set nocount on;
-	if exists(
-		select * 
-		from	crowdsourced_research_vote
-		where	crowdsourced_research_id = @crowdsourced_research_id
-		and person_id = @person_id
-		) 
-	begin
-		return -1
-	end   
-	
+
 	insert into crowdsourced_research_vote
 	(
 		crowdsourced_research_id, 

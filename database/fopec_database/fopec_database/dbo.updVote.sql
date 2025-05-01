@@ -9,16 +9,6 @@ create proc updVote
 	@person_id int,
 	@vote_type varchar(100)
 as 
-	if not exists(
-		select * 
-		from crowdsourced_research_vote
-		where crowdsourced_research_id = @crowdsourced_research_id
-		and person_id = @person_id
-		) 
-	begin
-		return -1
-	end   
-	
 	update	crowdsourced_research_vote
 	set		vote_type = @vote_type,
 			updated = getdate()
