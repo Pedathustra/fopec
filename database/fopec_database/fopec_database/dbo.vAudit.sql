@@ -47,7 +47,8 @@ as
 
  
 go
-	 
+
+/*	 
 	select  a.id,
 			a.first_name,
 			a.last_name,
@@ -64,4 +65,4 @@ go
 
 select * from person where id = 152
  
-	
+	*/

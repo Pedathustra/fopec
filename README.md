@@ -67,18 +67,18 @@ This setup enables stateless session management and secure identity propagation 
 │ ├── package.json – Backend package config
 │ ├── server.js – Entry point for the backend server
 │ └── src
-│ ├── app.js
-│ ├── config – Environment and database configs
-│ ├── resolvers – GraphQL resolvers mapped to stored procs
-│ └── schema – GraphQL type definitions and operations
+│ │ ├── app.js
+│ │ ├── resolvers – GraphQL resolvers mapped to stored procs
+│ │ └── schema – GraphQL type definitions and operations
 │
 ├── database
 │ ├── DataDiagram.png – ER diagram
 │ ├── backups – SQL Server `.bak` files
 │ └── fopec_database
+│ │ ├── fopec_database – Contains stored procedures, views, triggers, functions
+│ │ └── fopec_database.ssmssln – SSMS solution file
 │ ├── build_database_objects.sql
-│ ├── fopec_database – Contains stored procedures, views, triggers, functions
-│ └── fopec_database.ssmssln – SSMS solution file
+
 │
 ├── frontend
 │ ├── public
@@ -102,16 +102,47 @@ This setup enables stateless session management and secure identity propagation 
 ├── package.json – Root-level for tooling or monorepo setup
 └── package-lock.json
 
-## CRUD Coverage
+## CRUD Coverage - Stored Procedures / Trigger
 
-| Entity                       | Create (`ins`)            | Read (`get`)                                                   | Update (`upd`)                                   | Delete (`del`)            |
-| ---------------------------- | ------------------------- | -------------------------------------------------------------- | ------------------------------------------------ | ------------------------- |
-| `person`                     | `insPerson`               | `getPerson`, `getPersons`                                      | `updPerson`, `updPersonActive`, `updPersonAudit` | `delPerson`               |
-| `address`                    | `insAddress`              | `getAddresses`, `getAddressesByCompanyId`                      | `updAddress`                                     | `delAddress`              |
-| `company`                    | `insCompany`              | `getCompanies`, `getCompaniesByPersonID`                       | `updCompany`                                     | `delCompany`              |
-| `business_focus`             | `insBusinessFocus`        | `getBusinessFocuses`, `getBusinessFocusesByCompanyId`          | `updBusinessFocus`                               | `delBusinessFocus`        |
-| `ownership_type`             | `insOwnershipType`        | `getOwnershipTypes`                                            | `updOwnershipType`                               | `delOwnershipType`        |
-| `crowdsourced_research`      | `insCrowdsourcedResearch` | `getCrowdsourcedResearch`, `getCrowdsourcedResearchByPersonId` | `updCrowdsourcedResearch`                        | `delCrowdsourcedResearch` |
-| `crowdsourced_research_vote` | `insVote`                 | `getVotes`                                                     | `updVote`                                        | `delVote`                 |
-| `company_location`           | `insCompanyLocation`      | –                                                              | `updCompanyLocation`                             | `delCompanyLocation`      |
-| `company_business_focus`     | `insCompanyBusinessFocus` |                                                                | `updCompanyBusinessFocus`                        | `delCompanyBusinessFocus` |
+All CRUD is enabled by stored procedure or trigger. Trigger functionality denoted by `*`.
+
+| Entity                       | Create (`ins`)            | Read (`get`)                                                                          | Update (`upd`)                 | Delete (`del`)            |
+| ---------------------------- | ------------------------- | ------------------------------------------------------------------------------------- | ------------------------------ | ------------------------- |
+| `person`                     | `insPerson`               | `getPerson`, `getPersons`,`getPersonActivity` ,`getPersonPasswordById`, `loginPerson` | `updPerson`, `updPersonActive` | `delPerson`               |
+| `person_audit`               | `trg_person_audit* `      | `getPersonActivity`                                                                   | `updPersonAudit`               | `delPersonAudit`          |
+| `address`                    | `insAddress`              | `getAddresses`, `getAddressesByCompanyId`                                             | `updAddress`                   | `delAddress`              |
+| `company`                    | `insCompany`              | `getCompanies`, `getCompaniesByPersonID`                                              | `updCompany`                   | `delCompany`              |
+| `business_focus`             | `insBusinessFocus`        | `getBusinessFocuses`, `getBusinessFocusesByCompanyId`                                 | `updBusinessFocus`             | `delBusinessFocus`        |
+| `ownership_type`             | `insOwnershipType`        | `getOwnershipTypes`                                                                   | `updOwnershipType`             | `delOwnershipType`        |
+| `crowdsourced_research`      | `insCrowdsourcedResearch` | `getCrowdsourcedResearch`, `getCrowdsourcedResearchByPersonId`                        | `updCrowdsourcedResearch`      | `delCrowdsourcedResearch` |
+| `crowdsourced_research_vote` | `insVote`                 | `getVotes`                                                                            | `updVote`                      | `delVote`                 |
+| `company_location`           | `insCompanyLocation`      | `getAddressesByCompanyId`                                                             | `updCompanyLocation`           | `delCompanyLocation`      |
+| `company_business_focus`     | `insCompanyBusinessFocus` | `getBusinessFocusesByCompanyId`,`getBusinessFocuses`                                  | `updCompanyBusinessFocus`      | `delCompanyBusinessFocus` |
+
+## Triggers
+
+    `trg_insteadOfDelete_person` – When a person is hard deleted, this trigger updates all foreign-key-dependent rows to reference a placeholder person record with id = 0. It also invokes the updPersonAudit procedure, which appends _DELETED to relevant string fields in the person_audit table. This ensures that referential integrity is preserved and the deletion is traceable.
+
+    `trg_person_audit` – Automatically inserts a record into person_audit whenever a user updates their profile via the Person Profile screen in the UI. This enables historical tracking of profile changes over time.
+
+## Functions
+
+    `fnCountProcedures`, `fnCountTriggers`, `fnCountUserTables`, `fnCountViews`, `fnFunctionsCount` – These scalar functions query SQL Server system tables to return counts of user-defined objects. They are composed into the `vCountDatabaseObjects` view, which powers the `Database Objects` screen.
+
+    `fnFormatPerson` – Used in the Persons screen to dynamically format display names (e.g., Last, First M., Username (First Last), etc.). This supports flexible UX in dropdowns and reports.
+
+## Views
+
+    `vCountDatabaseObjects` – Combines the various object-count functions into a single result set. Called by the `getDatabaseObjectCounts` procedure and displayed in the frontend via the Database Objects report.
+
+    `vVotes` – Joins the vote, company, ownership type, and observer data to show how users have voted on crowdsourced research.
+
+    `vPersonAudit` – A UNION view combining person and person_audit to create a chronological view of each user’s profile changes. Used in the Person Activity screen.
+
+## Reports
+
+    `Database Objects` – Powered by `getDatabaseObjectCounts`, this screen summarizes how many tables, views, stored procedures, functions, and triggers exist in the system. This serves both a reporting purpose and highlights overall schema complexity.
+
+    `Votes` – The Vote screen uses the `getVotes` procedure, which performs a cross-tab style aggregation to show upvotes and downvotes per crowdsourced observation. It includes related company, observer, and ownership type metadata to help users assess the legitimacy of each claim.
+
+    `Persons` – The Persons screen shows per-user counts of records in audit, company, research, and vote tables. Users can be soft-deleted (via is_active = 0) or hard-deleted (via delPerson, which invokes trg_insteadOfDelete_person). This allows for responsible data cleanup with visibility into user activity before deletion.
