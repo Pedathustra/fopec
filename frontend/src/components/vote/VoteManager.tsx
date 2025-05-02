@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { fetchVotes } from '../../graphql/fetchVotes';
 import { castVote } from '../../graphql/castVote';
 import { changeVote } from '../../graphql/changeVote';
@@ -11,16 +11,16 @@ export function VoteManager() {
   const [votes, setVotes] = useState<VoteSummary[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadVotes = async () => {
+  const loadVotes = useCallback(async () => {
     if (personId) {
       const data = await fetchVotes(personId);
       setVotes(data);
     }
-  };
+  }, [personId]);
 
   useEffect(() => {
     loadVotes().finally(() => setLoading(false));
-  }, [personId]);
+  }, [loadVotes, personId]);
 
   const handleVote = async (voteType: 'up' | 'down', item: VoteSummary) => {
     const action =
