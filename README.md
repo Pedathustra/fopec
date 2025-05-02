@@ -61,46 +61,28 @@ This setup enables stateless session management and secure identity propagation 
 
 ## Folder Strucutre
 
+```text
 .
 ├── backend
-│ ├── node_modules – Local backend dependencies
-│ ├── package.json – Backend package config
-│ ├── server.js – Entry point for the backend server
-│ └── src
-│ │ ├── app.js
-│ │ ├── resolvers – GraphQL resolvers mapped to stored procs
-│ │ └── schema – GraphQL type definitions and operations
-│
+│   ├── src
+│   │   ├── config
+│   │   ├── resolvers
+│   │   └── schema
 ├── database
-│ ├── DataDiagram.png – ER diagram
-│ ├── backups – SQL Server `.bak` files
-│ └── fopec_database
-│ │ ├── fopec_database – Contains stored procedures, views, triggers, functions
-│ │ └── fopec_database.ssmssln – SSMS solution file
-│ ├── build_database_objects.sql
-
-│
+│   ├── backups
+│   ├── DataDiagram.png
+│   └── fopec_database
+│       ├── build_database_objects.sql
+│       └── fopec_database.ssmssln
 ├── frontend
-│ ├── public
-│ │ ├── FerretOutLogo.png
-│ │ └── favicon.png
-│ ├── src
-│ │ ├── assets – UI images and icons
-│ │ ├── components – React components organized by domain
-│ │ ├── graphql – GraphQL query/mutation client code
-│ │ ├── hooks – Custom React hooks (e.g. for auth)
-│ │ ├── types – Shared TypeScript types
-│ │ ├── utils – Frontend utility functions
-│ │ ├── App.tsx – Root component
-│ │ └── main.tsx – Application entry point
-│ ├── index.html
-│ ├── package.json
-│ ├── tsconfig.json
-│ └── vite.config.ts
-│
-├── README.md
-├── package.json – Root-level for tooling or monorepo setup
-└── package-lock.json
+│   ├── public
+│   └── src
+│       ├── components
+│       ├── graphql
+│       ├── hooks
+│       ├── types
+│       └── utils
+```
 
 ## CRUD Coverage - Stored Procedures / Trigger
 
@@ -147,10 +129,29 @@ All CRUD is enabled by stored procedure or trigger. Trigger functionality denote
 
     `Persons` – The Persons screen shows per-user counts of records in audit, company, research, and vote tables. Users can be soft-deleted (via is_active = 0) or hard-deleted (via delPerson, which invokes trg_insteadOfDelete_person). This allows for responsible data cleanup with visibility into user activity before deletion.
 
-## Running the application
+## Running the Application
 
-    - Database: database backups are available in the ./database/backups folder. You can grab the latest and restore. ./database/backups/20250501_fopec.bak.
+- **Database**
+  Database backups are available in the `./database/backups` folder. You can restore the latest backup file:
+  `./database/backups/20250501_fopec.bak`
 
-    - Backend: to run the backend, make a copy of the .env.example file (i.e. ./backend/.env.example) and rename it to .env. Create a database user and give it sysadmin privileges (not recommended except to exercise this project). Generate a secure jwt password. Populate the values in the .env file. Once the database is restored and the username and password are created, from the project root, run `cd backend && npm run dev`.
+- **Backend**
 
-    - Frontend: to run the frontend, make a copy of the .env.example file (i.e. ./frontend/.env.example) and rename it to .env. In this case, there is no need to modify the .env file. From the project root, run `cd backend && npm run dev`. Navigate to http://localhost:5173
+  1. Copy the `.env.example` file from `./backend/.env.example` and rename it to `.env`.
+  2. Create a SQL Server login and grant it `sysadmin` privileges (for demo purposes only).
+  3. Set a secure JWT secret and update the `.env` file accordingly.
+  4. Restore the database and ensure login access is working.
+  5. From the project root, run:
+     ```bash
+     cd backend && npm run dev
+     ```
+
+- **Frontend**
+  1. Copy the `.env.example` file from `./frontend/.env.example` and rename it to `.env`.
+     (No additional config is needed for this file.)
+  2. From the project root, run:
+     ```bash
+     cd frontend && npm run dev
+     ```
+  3. Open your browser and navigate to:
+     [http://localhost:5173](http://localhost:5173)
