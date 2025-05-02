@@ -24,7 +24,7 @@ This database is normalized to **Boyce-Codd Normal Form (BCNF)**.
 
 - All non-key columns are directly dependent on their table’s primary key, satisfying **3NF**
 - No transitive dependencies or redundant attributes exist
-- Junction tables (e.g., `company_business_focus`) rely on composite candidate keys and have no partial dependencies
+- Junction tables (e.g., `company_business_focus`, `company_location`) rely on composite candidate keys and have no partial dependencies
 - All determinants are candidate keys, satisfying **BCNF**
 
 Lookup values (e.g., `ownership_type`, `business_focus`) are normalized into separate reference tables and linked by foreign keys.
@@ -146,3 +146,11 @@ All CRUD is enabled by stored procedure or trigger. Trigger functionality denote
     `Votes` – The Vote screen uses the `getVotes` procedure, which performs a cross-tab style aggregation to show upvotes and downvotes per crowdsourced observation. It includes related company, observer, and ownership type metadata to help users assess the legitimacy of each claim.
 
     `Persons` – The Persons screen shows per-user counts of records in audit, company, research, and vote tables. Users can be soft-deleted (via is_active = 0) or hard-deleted (via delPerson, which invokes trg_insteadOfDelete_person). This allows for responsible data cleanup with visibility into user activity before deletion.
+
+## Running the application
+
+    - Database: database backups are available in the ./database/backups folder. You can grab the latest and restore. ./database/backups/20250501_fopec.bak.
+
+    - Backend: to run the backend, make a copy of the .env.example file (i.e. ./backend/.env.example) and rename it to .env. Create a database user and give it sysadmin privileges (not recommended except to exercise this project). Generate a secure jwt password. Populate the values in the .env file. Once the database is restored and the username and password are created, from the project root, run `cd backend && npm run dev`.
+
+    - Frontend: to run the frontend, make a copy of the .env.example file (i.e. ./frontend/.env.example) and rename it to .env. In this case, there is no need to modify the .env file. From the project root, run `cd backend && npm run dev`. Navigate to http://localhost:5173
