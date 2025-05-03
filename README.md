@@ -18,16 +18,33 @@ This application follows a three-tier architecture:
 
 [![ER Diagram](../database/DataDiagram.png)](../database/DataDiagram.png)
 
-## Normalization
+## Normalization and Integrity Enforcement
 
-This database is normalized to **Boyce-Codd Normal Form (BCNF)**.
+This database is normalized to **Boyce-Codd Normal Form (BCNF)**:
 
-- All non-key columns are directly dependent on their table’s primary key, satisfying **3NF**
-- No transitive dependencies or redundant attributes exist
-- Junction tables (e.g., `company_business_focus`, `company_location`) rely on composite candidate keys and have no partial dependencies
-- All determinants are candidate keys, satisfying **BCNF**
+- All non-key attributes are fully functionally dependent on candidate keys, satisfying **3NF**
+- No transitive dependencies or redundant fields exist
+- Junction tables (`company_business_focus`, `company_location`) use **composite primary keys**, eliminating partial dependencies
+- The `crowdsourced_research` table uses a **surrogate primary key**, but a **unique constraint** on `(company_id, ownership_type_id, observing_person_id)` ensures the composite candidate key logic is still respected
+- All functional dependencies have candidate keys as their determinants, satisfying **BCNF**
 
-Lookup values (e.g., `ownership_type`, `business_focus`) are normalized into separate reference tables and linked by foreign keys.
+Reference data such as `ownership_type`, `business_focus`, and `address` is normalized into separate lookup tables and enforced through foreign keys. Foreign key constraints are used throughout the schema to maintain referential integrity across all core and junction tables.
+
+Data integrity is maintained through a combination of **primary keys**, **foreign keys**, **unique constraints**, **check constraints**, and **triggers**:
+
+- **Primary keys** enforce entity integrity:
+  - Most tables use a surrogate primary key (`id`)
+  - Junction tables like `company_business_focus` and `company_location` use **composite primary keys** for natural uniqueness
+- The `crowdsourced_research` table uses a surrogate key (`id`) but also enforces a **unique constraint** on `(company_id, ownership_type_id, observing_person_id)` to prevent duplicate observations by the same user
+- **Foreign keys** enforce referential integrity across reference and core tables, including:
+  - `business_focus`, `ownership_type`, and `address`
+  - `person`, `company`, `crowdsourced_research`, and `crowdsourced_research_vote`
+- A **check constraint** on `crowdsourced_research_vote.vote_type` ensures only `'up'` or `'down'` values are accepted
+- **Triggers** enforce business rules:
+  - `trg_insteadOfDelete_person`: redirects related rows to a placeholder person (`id = 0`) when a person is hard-deleted
+  - `trg_person_audit`: automatically logs changes to a person’s profile in the `person_audit` table upon update
+
+Together, these normalization and integrity mechanisms ensure consistency, enforce business rules, and maintain high data quality throughout the system.
 
 ## Transaction Isolation
 
@@ -38,24 +55,6 @@ SQL Server’s default isolation level, READ COMMITTED, is used throughout the a
 - There are no bulk read/write operations, with one exception: deleting a user (`person`) can involve multiple updates or deletes across related tables. However, this operation is controlled and infrequent, and referential updates are managed safely using an `INSTEAD OF DELETE` trigger.
 
 As such, no explicit changes to the isolation level were necessary.
-
-## Integrity Enforcement
-
-Data integrity is maintained through a combination of primary key, foreign key, check constraints, and triggers:
-
-Foreign key relationships enforce referential integrity across tables. For example, reference (lookup) tables like business_focus and ownership_type constrain valid entries in company_business_focus and crowdsourced_research.
-
-The address table also acts as a reference table, linked to companies via the company_location junction table.
-
-A check constraint on the crowdsourced_research_vote table enforces valid domain values by limiting the vote_type column to 'up' or 'down'.
-
-Triggers provide additional logical enforcement:
-
-- trg_insteadOfDelete_person: preserves referential integrity when a person is hard-deleted by redirecting related rows to a placeholder "deleted" record.
-
-- trg_person_audit: ensures an audit trail by inserting a snapshot of user data into person_audit upon profile update.
-
-These mechanisms collectively safeguard the consistency, accuracy, and traceability of data within the application.
 
 ## Authentication & Sessions
 
