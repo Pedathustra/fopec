@@ -16,7 +16,7 @@ This application follows a three-tier architecture:
 
 ## ER Diagram
 
-[![ER Diagram](../database/DataDiagram.png)](../database/DataDiagram.png)
+[![ER Diagram](./database/DataDiagram.png)](./database/DataDiagram.png)
 
 ## Normalization and Integrity Enforcement
 
