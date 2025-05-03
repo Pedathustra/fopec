@@ -89,8 +89,12 @@ This setup enables stateless session management and secure identity propagation 
 │   ├── backups
 │   ├── DataDiagram.png
 │   └── fopec_database
-│       ├── build_database_objects.sql
-│       └── fopec_database.ssmssln
+│       └── fopec_database
+│         ├── functions
+│         ├── procedures
+│         ├── tables
+│         ├── triggers
+│         └── views
 ├── frontend
 │   ├── public
 │   └── src
