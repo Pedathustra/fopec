@@ -39,6 +39,24 @@ SQL Server’s default isolation level, READ COMMITTED, is used throughout the a
 
 As such, no explicit changes to the isolation level were necessary.
 
+## Integrity Enforcement
+
+Data integrity is maintained through a combination of primary key, foreign key, check constraints, and triggers:
+
+Foreign key relationships enforce referential integrity across tables. For example, reference (lookup) tables like business_focus and ownership_type constrain valid entries in company_business_focus and crowdsourced_research.
+
+The address table also acts as a reference table, linked to companies via the company_location junction table.
+
+A check constraint on the crowdsourced_research_vote table enforces valid domain values by limiting the vote_type column to 'up' or 'down'.
+
+Triggers provide additional logical enforcement:
+
+- trg_insteadOfDelete_person: preserves referential integrity when a person is hard-deleted by redirecting related rows to a placeholder "deleted" record.
+
+- trg_person_audit: ensures an audit trail by inserting a snapshot of user data into person_audit upon profile update.
+
+These mechanisms collectively safeguard the consistency, accuracy, and traceability of data within the application.
+
 ## Authentication & Sessions
 
 User authentication is handled through a JWT-based login flow. The application includes:
