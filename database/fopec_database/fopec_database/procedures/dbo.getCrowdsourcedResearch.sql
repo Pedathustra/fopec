@@ -22,7 +22,8 @@ from crowdsourced_research cr
 	join ownership_type ot on cr.ownership_type_id = ot.id
 	join person p on cr.observing_person_id = p.id
 	left join company pc on cr.parent_company_id = pc.id
-	order by cr.created desc
+where cr.observing_person_id != 0
+order by cr.created desc
 go
 
 --select parent_company_id from crowdsourced_research
