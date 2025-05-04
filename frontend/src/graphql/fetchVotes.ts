@@ -10,14 +10,14 @@ export type VoteSummary = {
   observerId: number;
   upCount: number;
   downCount: number;
+  hasUserVoted: boolean;
+  isObserver: boolean;
 };
 
-export async function fetchVotes(
-  observerPersonId: number
-): Promise<VoteSummary[]> {
+export async function fetchVotes(personId: number): Promise<VoteSummary[]> {
   const query = `
-    query($observerPersonId: Int!) {
-      getVotes(observerPersonId: $observerPersonId) {
+    query($personId: Int!) {
+      getVotes(personId: $personId) {
         companyName
         ownershipTypeDescription
         parentCompanyName
@@ -27,12 +27,14 @@ export async function fetchVotes(
         observerId
         upCount
         downCount
+        hasUserVoted
+        isObserver
       }
     }
   `;
 
   const data = await gqlRequest<{ getVotes: VoteSummary[] }>(query, {
-    observerPersonId,
+    personId,
   });
   return data.getVotes;
 }

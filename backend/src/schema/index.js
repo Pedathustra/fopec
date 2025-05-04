@@ -90,6 +90,8 @@ type VoteSummary {
   observerId: Int!
   upCount: Int!
   downCount: Int!
+  hasUserVoted: Boolean!
+	isObserver: Boolean!
 }
 type PersonAuditRecord {
   firstName: String!
@@ -131,7 +133,7 @@ type Query {
     getCompaniesByPersonId(personId: Int!): [Company!]!
     getOwnershipTypes: [OwnershipTypes]
     getPerson(id: Int!): Person
-    getVotes(observerPersonId: Int!): [VoteSummary!]!    
+    getVotes(personId: Int!): [VoteSummary!]!    
     getPersons: [PersonBasic!]!
     getPersonAuditById(personId: Int!): [PersonAuditRecord!]!
     getPersonActivity(nameDisplayType: Int!): [PersonActivityRow!]!

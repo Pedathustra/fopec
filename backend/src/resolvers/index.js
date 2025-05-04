@@ -538,12 +538,12 @@ const resolvers = {
       throw new Error('Update failed');
     }
   },
-  getVotes: async ({ observerPersonId }) => {
+  getVotes: async ({ personId }) => {
     try {
       let pool = await sql.connect(dbConfig);
       const result = await pool
         .request()
-        .input('observer_person_id', sql.Int, observerPersonId)
+        .input('person_id', sql.Int, personId)
         .execute('getVotes');
 
       return result.recordset.map((row) => ({
@@ -556,6 +556,8 @@ const resolvers = {
         observerId: row.observer_id,
         upCount: row.up_count,
         downCount: row.down_count,
+        hasUserVoted: row.has_user_voted,
+        isObserver: row.is_observer,
       }));
     } catch (err) {
       console.error('Error fetching votes:', err);
@@ -564,6 +566,11 @@ const resolvers = {
   },
   castVote: async ({ crowdsourcedResearchId, personId, voteType }) => {
     try {
+      console.log('insertVote ', {
+        crowdsourcedResearchId,
+        personId,
+        voteType,
+      });
       let pool = await sql.connect(dbConfig);
       const result = await pool
         .request()
@@ -581,6 +588,11 @@ const resolvers = {
 
   changeVote: async ({ crowdsourcedResearchId, personId, voteType }) => {
     try {
+      console.log('updateVote ', {
+        crowdsourcedResearchId,
+        personId,
+        voteType,
+      });
       let pool = await sql.connect(dbConfig);
       const result = await pool
         .request()

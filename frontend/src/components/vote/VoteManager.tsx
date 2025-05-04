@@ -14,6 +14,7 @@ export function VoteManager() {
   const loadVotes = useCallback(async () => {
     if (personId) {
       const data = await fetchVotes(personId);
+      console.log('data', data);
       setVotes(data);
     }
   }, [personId]);
@@ -23,13 +24,15 @@ export function VoteManager() {
   }, [loadVotes, personId]);
 
   const handleVote = async (voteType: 'up' | 'down', item: VoteSummary) => {
-    const action =
-      item.upCount > 0 || item.downCount > 0 ? changeVote : castVote;
+    if (item.isObserver) return;
+
+    const action = item.hasUserVoted ? changeVote : castVote;
     const success = await action({
       crowdsourcedResearchId: item.id,
       personId: personId!,
       voteType,
     });
+
     if (success === 0) loadVotes();
     else alert('Vote failed');
   };
@@ -39,6 +42,7 @@ export function VoteManager() {
       crowdsourcedResearchId: item.id,
       personId: personId!,
     });
+
     if (success === 0) loadVotes();
     else alert('Withdraw failed');
   };
@@ -76,6 +80,8 @@ export function VoteManager() {
                         flexDirection: 'column',
                         alignItems: 'center',
                         marginRight: '0.75rem',
+                        opacity: item.isObserver ? 0.4 : 1,
+                        pointerEvents: item.isObserver ? 'none' : 'auto',
                       }}
                     >
                       <div
@@ -83,7 +89,6 @@ export function VoteManager() {
                           display: 'flex',
                           alignItems: 'center',
                           marginBottom: '0.1rem',
-                          justifyContent: 'space-evenly',
                         }}
                       >
                         <button
@@ -146,6 +151,7 @@ export function VoteManager() {
                         cursor: 'pointer',
                       }}
                       title="Withdraw Vote"
+                      disabled={item.isObserver || !item.hasUserVoted}
                     >
                       ❌
                     </button>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { TableCell } from '../common/TableCell';
-import CompanySelect from '../common/CompanySelect';
+import { CompanySelectByPersonId } from '../common/CompanySelectByPersonId';
+
 import OwnershipTypeSelect from '../common/OwnershipTypeSelect';
 import { AddButton } from '../common/AddButton';
 import { ResearchEditRowProps } from '../../types/types';
@@ -17,7 +18,7 @@ const ResearchEditRow: React.FC<ResearchEditRowProps> = ({
   return (
     <tr>
       <TableCell>
-        <CompanySelect
+        <CompanySelectByPersonId
           value={value.companyId}
           onChange={(val) => onChange('companyId', val)}
           companies={companies}
@@ -41,7 +42,7 @@ const ResearchEditRow: React.FC<ResearchEditRowProps> = ({
         />
       </TableCell>
       <TableCell>
-        <CompanySelect
+        <CompanySelectByPersonId
           value={value.parentCompanyId === null ? '' : value.parentCompanyId}
           onChange={(val) => onChange('parentCompanyId', val)}
           companies={companies}

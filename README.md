@@ -128,6 +128,14 @@ All CRUD is enabled by stored procedure or trigger. Trigger functionality denote
 
     `trg_person_audit` – Automatically inserts a record into person_audit whenever a user updates their profile via the Person Profile screen in the UI. This enables historical tracking of profile changes over time.
 
+## Reports
+
+    `Database Objects` – Powered by `getDatabaseObjectCounts`, this screen summarizes how many tables, views, stored procedures, functions, and triggers exist in the system. This serves both a reporting purpose and highlights overall schema complexity.
+
+    `Votes` – The Vote screen uses the `getVotes` procedure, which performs a cross-tab style aggregation to show upvotes and downvotes per crowdsourced observation. It includes related company, observer, and ownership type metadata to help users assess the legitimacy of each claim.
+
+    `Persons` – The Persons screen shows per-user counts of records in audit, company, research, and vote tables. Users can be soft-deleted (via is_active = 0) or hard-deleted (via delPerson, which invokes trg_insteadOfDelete_person). This allows for responsible data cleanup with visibility into user activity before deletion.
+
 ## Functions
 
     `fnCountProcedures`, `fnCountTriggers`, `fnCountUserTables`, `fnCountViews`, `fnFunctionsCount` – These scalar functions query SQL Server system tables to return counts of user-defined objects. They are composed into the `vCountDatabaseObjects` view, which powers the `Database Objects` screen.
@@ -142,13 +150,6 @@ All CRUD is enabled by stored procedure or trigger. Trigger functionality denote
 
     `vPersonAudit` – A UNION view combining person and person_audit to create a chronological view of each user’s profile changes. Used in the Person Activity screen.
 
-## Reports
-
-    `Database Objects` – Powered by `getDatabaseObjectCounts`, this screen summarizes how many tables, views, stored procedures, functions, and triggers exist in the system. This serves both a reporting purpose and highlights overall schema complexity.
-
-    `Votes` – The Vote screen uses the `getVotes` procedure, which performs a cross-tab style aggregation to show upvotes and downvotes per crowdsourced observation. It includes related company, observer, and ownership type metadata to help users assess the legitimacy of each claim.
-
-    `Persons` – The Persons screen shows per-user counts of records in audit, company, research, and vote tables. Users can be soft-deleted (via is_active = 0) or hard-deleted (via delPerson, which invokes trg_insteadOfDelete_person). This allows for responsible data cleanup with visibility into user activity before deletion.
 
 ## Running the Application
 
