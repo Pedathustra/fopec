@@ -12,7 +12,7 @@ as
 		
  
 		
-select	distinct 
+select	  
 		c.name company_name
 	,	ot.description ownership_type_description
 	,	parent_company.name parent_company_name
@@ -24,12 +24,14 @@ select	distinct
 	,	sum(case when crv.vote_type = 'down' then 1 else 0 end) down_count
 	,	has_user_voted = sum(case when crv.person_id  = @person_id then 1 else 0  end) -- person has already voted on this
 	,	is_observer  = sum(case when cr.observing_person_id = @person_id then 1 else 0  end) -- person has already voted on this
+	,	created = max(crv.created)
 from company c
 	join crowdsourced_research cr on c.id = cr.company_id
 	join ownership_type ot on cr.ownership_type_id = ot.id
 	left join company parent_company on cr.parent_company_id = parent_company.id
 	join person p on cr.observing_person_id = p.id
 	left join crowdsourced_research_vote crv on cr.id = crv.crowdsourced_research_id
+--where cr.observing_person_id != 0
 group by 
 		c.name  
 	,	ot.description 
@@ -38,13 +40,13 @@ group by
 	,	cr.notes
 	,	p.username 
 	,	p.id
-	,	crv.created
---order by crv.created desc
+	
+order by created desc
 go
 
  
 
 
---exec getVotes @person_id = 156
+exec getVotes @person_id = 156
  
  

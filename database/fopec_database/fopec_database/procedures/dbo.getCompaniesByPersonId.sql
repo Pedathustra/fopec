@@ -19,7 +19,8 @@ begin
 		,	last_updated
 		,	person_id_created
 	from company
-	where person_id_created = @person_id_created;
+	where person_id_created = @person_id_created
+		and person_id_created != 0
 	;
 end 
 go 
